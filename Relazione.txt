@@ -1,0 +1,5 @@
+ABSTRACT
+
+Il presente progetto di programmazione ad oggetti in C++ riguarda lo sviluppo di un sistema di monitoraggio per un'azienda che necessita di controlli microbiologici. Il sistema utilizza una rete di sensori per monitorare tre parametri chiave: pH, torbidità e temperatura. L'obiettivo è garantire la qualità e la sicurezza dei prodotti attraverso un controllo accurato e continuo delle condizioni microbiologiche.
+
+Il progetto prevede la creazione di una gerarchia di classi in C++ che rappresentano i diversi sensori, ognuna delle quali è dotata di metodi per l'acquisizione e l'elaborazione dei dati. La classe base "Sensore" definisce le funzionalità comuni, mentre le classi derivate "SensorePH", "SensoreTorbidità" e "SensoreTemperatura" implementano le specificità dei rispettivi sensori.
