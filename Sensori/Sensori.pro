@@ -11,11 +11,17 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    sensor.cpp
+    phsensor.cpp \
+    sensor.cpp \
+    tempsensor.cpp \
+    turbsensor.cpp
 
 HEADERS += \
     mainwindow.h \
-    sensor.h
+    phsensor.h \
+    sensor.h \
+    tempsensor.h \
+    turbsensor.h
 
 FORMS += \
     mainwindow.ui
