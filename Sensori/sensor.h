@@ -19,6 +19,7 @@ public:
     virtual std::string getName() const;
     virtual float getMin() const;
     virtual float getMax() const;
+    virtual void Simulation(const Sensor*) const; /*VOID tipo da sostituire probabilmente*/
 };
 
 #endif // SENSOR_H
