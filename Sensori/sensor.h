@@ -9,7 +9,7 @@ class Sensor
 protected:
     u_int SensorID;
     std::string Name;
-    std::vector<int> Time;
+    const std::vector<int> Time = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
     float MinValue = 0;
     float MaxValue = 0;
 public:
