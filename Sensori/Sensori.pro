@@ -12,7 +12,6 @@ SOURCES += \
     Model.cpp \
     SensorViewer.cpp \
     main.cpp \
-    mainwindow.cpp \
     phsensor.cpp \
     sensor.cpp \
     sensorcreator.cpp \
@@ -22,15 +21,13 @@ SOURCES += \
 HEADERS += \
     Model.h \
     SensorViewer.h \
-    mainwindow.h \
     phsensor.h \
     sensor.h \
     sensorcreator.h \
     tempsensor.h \
     turbsensor.h
 
-FORMS += \
-    mainwindow.ui
+FORMS +=
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
