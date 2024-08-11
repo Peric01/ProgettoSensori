@@ -1,0 +1,11 @@
+release/Model.o
+release/SensorViewer.o
+release/main.o
+release/mainwindow.o
+release/phsensor.o
+release/sensor.o
+release/sensorcreator.o
+release/tempsensor.o
+release/turbsensor.o
+release/moc_SensorViewer.o
+release/moc_mainwindow.o

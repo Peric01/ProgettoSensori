@@ -1,0 +1,11 @@
+debug/Model.o
+debug/SensorViewer.o
+debug/main.o
+debug/mainwindow.o
+debug/phsensor.o
+debug/sensor.o
+debug/sensorcreator.o
+debug/tempsensor.o
+debug/turbsensor.o
+debug/moc_SensorViewer.o
+debug/moc_mainwindow.o
