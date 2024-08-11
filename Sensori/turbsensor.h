@@ -4,10 +4,9 @@
 
 class TurbSensor: public Sensor
 {
-private:
-    std::vector<float> turb_value;
 public:
     TurbSensor(std::string&);
     ~TurbSensor() = default;
+    void Simulation() const override;
 };
 #endif // TURBSENSOR_H

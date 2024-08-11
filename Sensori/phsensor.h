@@ -4,11 +4,9 @@
 
 class PHSensor : public Sensor
 {
-private:
-    std::vector<float> ph_value;
 public:
-    PHSensor(std::string&);
+    PHSensor(const std::string&);
     ~PHSensor() = default;
+    void Simulation() const override;
 };
-
 #endif // PHSENSOR_H

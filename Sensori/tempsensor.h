@@ -4,10 +4,9 @@
 
 class TempSensor: public Sensor
 {
-private:
-    std::vector<float> temp_value;
 public:
     TempSensor(std::string&);
     ~TempSensor() = default;
+    void Simulation() const override;
 };
 #endif // TEMPSENSOR_H

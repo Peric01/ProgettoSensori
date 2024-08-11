@@ -2,6 +2,7 @@
 #include <random>
 #include <vector>
 #include <algorithm>
+#include <numeric>
 
 typedef unsigned int u_int;
 
@@ -22,8 +23,9 @@ public:
     float getMin() const;
     float getMax() const;
     virtual void Simulation() const = 0;
-    virtual void updateMaxValue() = 0;
-    virtual void updateMinValue() = 0;
+    void addValue(float value);
+    void updateMaxValue();
+    void updateMinValue();
 };
 
 class PHSensor : public Sensor
@@ -32,9 +34,15 @@ public:
     PHSensor(std::string&);
     ~PHSensor() = default;
     void Simulation() const override;
-    void addValue(float value);
-    void updateMaxValue() override;
-    void updateMinValue() override;
+};
+
+class SensorCreator
+{
+public:
+    TempSensor* createTemp(std::string& n) const;
+    TurbSensor* createTurb(std::string& n) const;
+    PHSensor* createPH(std::string& n) const;
+    void SensorDeleter();
 };
 
 Sensor::Sensor(const std::string& n) {
@@ -45,6 +53,18 @@ Sensor::Sensor(const std::string& n) {
 
     // Assegnazione di un ID casuale /*DA CONTROLLARE POI SE VIENE SALVATO L'ID, AL MOMENTO OGNI COMPILAZIONE NE CREA UNO NUOVO*/
     SensorID = dis(gen);
+}
+
+void Sensor::addValue(float value) {
+    values.push_back(value);
+}
+
+void Sensor::updateMaxValue() {
+    MaxValue = *std::max_element(values.begin(), values.end());
+}
+
+void Sensor::updateMinValue() {
+    MinValue = *std::min_element(values.begin(), values.end());
 }
 
 u_int Sensor::getID() const{
@@ -66,21 +86,20 @@ float Sensor::getMax() const{
 void PHSensor::Simulation() const{
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> dis(0, 14);
+    std::uniform_real_distribution<float> dis(-50, 250);
 
     std::vector<float> sensorValues;
-    
-    for (int i = 0; i < Time.size(); i++) {
+    for (int i = 0; i < 12; ++i) {
         float value = dis(gen);
         sensorValues.push_back(value);
         if (i == 0) {
             std::cout << "[";
-            std::cout << value;
+        } else {
+            std::cout << ", ";
         }
-        std::cout << ", " << value;
-        if (i == Time.size() - 1)
-            std::cout << "]" << std::endl;
+        std::cout << value;
     }
+    std::cout << "]" << std::endl;
     float max_value = *std::max_element(sensorValues.begin(), sensorValues.end());
     float min_value = *std::min_element(sensorValues.begin(), sensorValues.end());
     float sum = std::accumulate(sensorValues.begin(), sensorValues.end(), 0.0);
@@ -91,17 +110,18 @@ void PHSensor::Simulation() const{
 
 PHSensor::PHSensor(std::string& n) : Sensor(n){}
 
-void PHSensor::addValue(float value) {
-    values.push_back(value);
+TempSensor* SensorCreator::createTemp(std::string& n) const{
+    return new TempSensor(n);
 }
 
-void PHSensor::updateMaxValue() {
-    MaxValue = *std::max_element(values.begin(), values.end());
+PHSensor* SensorCreator::createPH(std::string& n) const{
+    return new PHSensor(n);
 }
 
-void PHSensor::updateMinValue() {
-    MinValue = *std::min_element(values.begin(), values.end());
+TurbSensor* SensorCreator::createTurb(std::string& n) const{
+    return new TurbSensor(n);
 }
+
 
 int main(){
     std::string name = "PHSensor";
@@ -109,5 +129,5 @@ int main(){
     std::cout << "ID: " << ph.getID() << std::endl;
     std::cout << "Name: " << ph.getName() << std::endl;
     ph.Simulation();
-    return 0;
+    return 1;
 }

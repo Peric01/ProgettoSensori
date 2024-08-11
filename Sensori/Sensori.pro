@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     Model.cpp \
+    SensorViewer.cpp \
     main.cpp \
     mainwindow.cpp \
     phsensor.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
 
 HEADERS += \
     Model.h \
+    SensorViewer.h \
     mainwindow.h \
     phsensor.h \
     sensor.h \
