@@ -6,6 +6,8 @@
 #include <QMenu>
 #include <QAction>
 #include <QLabel>
+#include <QLineEdit>
+#include <QWidgetAction>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
