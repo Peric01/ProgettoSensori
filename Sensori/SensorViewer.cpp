@@ -1,98 +1,176 @@
 #include "SensorViewer.h"
 
-SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
-    QVBoxLayout* mainLayout = new QVBoxLayout;
-
-    // Menu
+void SensorViewer::addMenus(QVBoxLayout* mainLayout)
+{
     QMenuBar* menuBar = new QMenuBar(this);
     QMenu* file = new QMenu("File", menuBar);
     menuBar->addMenu(file);
+    QMenu* NewSensor = new QMenu("Aggiungi Sensore", menuBar);
+    menuBar->addMenu(NewSensor);
 
     // Menu/Gestione File
     file->addAction(new QAction("Salva", file));
     file->addAction(new QAction("Apri", file));
     file->addAction(new QAction("Chiudi", file));
+    // Menu/Aggiunta Sensori
+    NewSensor->addAction(new QAction("Temperatura", NewSensor));
+    NewSensor->addAction(new QAction("Torbidità", NewSensor));
+    NewSensor->addAction(new QAction("PH", NewSensor));
+
     mainLayout->addWidget(menuBar);
 
     // Menu/Barra di ricerca nel Menu
     QLineEdit* searchBar = new QLineEdit(this);
-    searchBar->setPlaceholderText("Search...");
+    searchBar->setPlaceholderText("Cerca...");
     menuBar->setCornerWidget(searchBar);
+}
 
-    // Layout principale con due colonne: sinistra (sensori) e destra (dati e grafico)
-    QHBoxLayout* screenLayout = new QHBoxLayout;
+void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
+{
+    QLabel* temperatureLabel = new QLabel("Temperature Sensors", this);
+    QVBoxLayout* temperatureLayout = new QVBoxLayout;
+    temperatureLayout->addWidget(temperatureLabel);
 
-    // Colonna sinistra: Elenco dei sensori
-    QVBoxLayout* sensorLayout = new QVBoxLayout;
-    QFrame* sensorFrame = new QFrame(this);
-    sensorFrame->setFrameStyle(QFrame::Box);
-    sensorFrame->setStyleSheet("border: 2px solid black;");  // Bordo esterno nero
-    sensorFrame->setLayout(sensorLayout);
+    // Aggiungi i sensori di temperatura (puoi aggiungere dinamicamente)
+    for (int i = 1; i <= 10; i++) { // Esempio con 10 sensori
+        temperatureLayout->addWidget(new QLabel("Temperature Sensor " + QString::number(i), this));
+    }
 
-    // Esempio di aggiunta di sensori alla lista (puoi aggiungere dinamicamente)
-    QLabel* sensorLabel1 = new QLabel("Torbidity", this);
-    QLabel* sensorLabel2 = new QLabel("Temperature", this);
-    QLabel* sensorLabel3 = new QLabel("PH", this);
+    // Scroll area per i sensori di temperatura
+    QScrollArea* temperatureScrollArea = new QScrollArea(this);
+    QWidget* temperatureWidget = new QWidget();
+    temperatureWidget->setLayout(temperatureLayout);
+    temperatureScrollArea->setWidget(temperatureWidget);
+    temperatureScrollArea->setWidgetResizable(true);
+    sensorLayout->addWidget(temperatureScrollArea);
 
-    sensorLayout->addWidget(sensorLabel1);
-    sensorLayout->addWidget(sensorLabel2);
-    sensorLayout->addWidget(sensorLabel3);
-    sensorLayout->addStretch();
+    // Sezione per i sensori di torbidità
+    QLabel* turbidityLabel = new QLabel("Turbidity Sensors", this);
+    QVBoxLayout* turbidityLayout = new QVBoxLayout;
+    turbidityLayout->addWidget(turbidityLabel);
 
-    // Colonna destra: Divisa in due righe (dati e pulsanti sopra, grafico sotto)
-    QVBoxLayout* dataAndGraphLayout = new QVBoxLayout;
+    // Aggiungi i sensori di torbidità
+    for (int i = 1; i <= 8; i++) { // Esempio con 8 sensori
+        turbidityLayout->addWidget(new QLabel("Turbidity Sensor " + QString::number(i), this));
+    }
 
-    // Parte superiore: Dati statici, modificabili, e pulsanti in orizzontale
-    QHBoxLayout* dataLayout = new QHBoxLayout;
+    // Scroll area per i sensori di torbidità
+    QScrollArea* turbidityScrollArea = new QScrollArea(this);
+    QWidget* turbidityWidget = new QWidget();
+    turbidityWidget->setLayout(turbidityLayout);
+    turbidityScrollArea->setWidget(turbidityWidget);
+    turbidityScrollArea->setWidgetResizable(true);
+    sensorLayout->addWidget(turbidityScrollArea);
 
-    // Aggiungi widget per i dati (statici e modificabili)
+    // Sezione per i sensori di pH
+    QLabel* phLabel = new QLabel("pH Sensors", this);
+    QVBoxLayout* phLayout = new QVBoxLayout;
+    phLayout->addWidget(phLabel);
+
+    // Aggiungi i sensori di pH
+    for (int i = 1; i <= 5; i++) { // Esempio con 5 sensori
+        phLayout->addWidget(new QLabel("pH Sensor " + QString::number(i), this));
+    }
+
+    // Scroll area per i sensori di pH
+    QScrollArea* phScrollArea = new QScrollArea(this);
+    QWidget* phWidget = new QWidget();
+    phWidget->setLayout(phLayout);
+    phScrollArea->setWidget(phWidget);
+    phScrollArea->setWidgetResizable(true);
+    sensorLayout->addWidget(phScrollArea);
+}
+
+void SensorViewer::addData(QHBoxLayout* dataLayout)
+{
     QLabel* staticDataLabel = new QLabel("Dati Statici", this);
     QLabel* editableDataLabel = new QLabel("Dati Modificabili", this);
     dataLayout->addWidget(staticDataLabel);
     dataLayout->addWidget(editableDataLabel);
+}
 
-    // Layout verticale per i pulsanti
-    QVBoxLayout* buttonLayout = new QVBoxLayout;
-
-    // Spaziatori per centrare i pulsanti verticalmente
-    QSpacerItem* spacerTop = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    QSpacerItem* spacerBottom = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-    buttonLayout->addItem(spacerTop);
-
-    QPushButton* saveButton = new QPushButton("Save", this);
-    QPushButton* modifyButton = new QPushButton("Modify", this);
-    QPushButton* deleteButton = new QPushButton("Delete", this);
-    QPushButton* runSimulationButton = new QPushButton("Run Simulation", this);
+void SensorViewer::addButtons(QVBoxLayout* buttonLayout)
+{
+    QPushButton* saveButton = new QPushButton("Salva", this);
+    QPushButton* modifyButton = new QPushButton("Modifica", this);
+    QPushButton* deleteButton = new QPushButton("Elimina", this);
+    QPushButton* runSimulationButton = new QPushButton("Lancia Simulazione", this);
 
     buttonLayout->addWidget(saveButton);
     buttonLayout->addWidget(modifyButton);
     buttonLayout->addWidget(deleteButton);
     buttonLayout->addWidget(runSimulationButton);
+}
 
-    buttonLayout->addItem(spacerBottom);
-
-    // Aggiungi i pulsanti alla parte dati
-    dataLayout->addLayout(buttonLayout);
-
-    // Parte inferiore: Grafico della simulazione
+QFrame* SensorViewer::addGraph()
+{
     QFrame* graphFrame = new QFrame(this);
     graphFrame->setFrameStyle(QFrame::Box);
-    graphFrame->setStyleSheet("border: 2px solid black;");  // Bordo esterno nero
+    graphFrame->setStyleSheet("border: 2px solid black;");
     QVBoxLayout* graphLayout = new QVBoxLayout;
     QLabel* graphLabel = new QLabel("Simulazione di grafico dei valori del sensore", this);
     graphFrame->setLayout(graphLayout);
     graphLayout->addWidget(graphLabel);
 
-    // Aggiungi i layout alla colonna destra
-    dataAndGraphLayout->addLayout(dataLayout, 1);  // Parte superiore con dati e pulsanti, occupa 50% dello spazio
-    dataAndGraphLayout->addWidget(graphFrame, 1);  // Parte inferiore con il grafico, occupa 50% dello spazio
+    return graphFrame;
+}
 
-    // Aggiungi la colonna sinistra e destra al layout principale
-    screenLayout->addWidget(sensorFrame, 1);  // 1/3 della larghezza per i sensori
-    screenLayout->addLayout(dataAndGraphLayout, 2);  // 2/3 della larghezza per i dati e il grafico
+SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
+    QVBoxLayout* mainLayout = new QVBoxLayout;
 
-    // Aggiungi il layout dello schermo al layout principale
+    QHBoxLayout* screenLayout = new QHBoxLayout;  // Layout principale: due colonne (sinistra e destra)
+
+    QVBoxLayout* sensorLayout = new QVBoxLayout;  // Layout verticale per i sensori
+    QFrame* sensorFrame = new QFrame(this);
+    sensorFrame->setFrameStyle(QFrame::Box);
+    sensorFrame->setStyleSheet("border: 2px solid black;");
+    sensorFrame->setLayout(sensorLayout);
+
+    QVBoxLayout* dataAndGraphLayout = new QVBoxLayout; // Layout verticale per dati e grafico
+
+    QHBoxLayout* dataAndButtonsLayout = new QHBoxLayout;  // Layout orizzontale per dati e pulsanti
+
+    QVBoxLayout* buttonLayout = new QVBoxLayout; // Layout verticale per i pulsanti
+
+    // Menu
+    addMenus(mainLayout);
+
+    // Sezione per i sensori
+    addSensors(sensorLayout);
+
+    // Aggiungi i dati e i pulsanti
+    addData(dataAndButtonsLayout);
+    addButtons(buttonLayout);
+
+    dataAndButtonsLayout->addLayout(buttonLayout); // Aggiungi i pulsanti a destra dei dati
+
+    QFrame* graphFrame = addGraph();
+
+    dataAndGraphLayout->addLayout(dataAndButtonsLayout, 1);
+    dataAndGraphLayout->addWidget(graphFrame, 1);
+
+    screenLayout->addWidget(sensorFrame, 1);
+    screenLayout->addLayout(dataAndGraphLayout, 2);
+
     mainLayout->addLayout(screenLayout);
+    mainLayout->setSpacing(0);
     setLayout(mainLayout);
+    resize(QSize(1024, 720));
+}
+
+void SensorViewer::showWarning(const QString& message){
+    QDialog* dialog = new QDialog(this);
+    dialog->setLayout(new QHBoxLayout);
+    dialog->layout()->addWidget(new QLabel(message, dialog));
+    dialog->layout()->setAlignment(Qt::AlignCenter);
+    dialog->setMinimumWidth(200);
+    dialog->setMaximumWidth(500);
+    dialog->show();
+}
+
+QString SensorViewer::showAddDialog(){
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Apri il File"), "/home");
+    if (fileName == "")
+        throw std::runtime_error("Nessun file scelto: aggiunta annullata");
+    return fileName;
 }

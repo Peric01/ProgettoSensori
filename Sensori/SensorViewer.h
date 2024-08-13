@@ -11,15 +11,25 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QScrollArea>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QValueAxis>
+#include <QDialog>
+#include <qfiledialog.h>
 
 
-class SensorViewer : public QWidget
-{
+class SensorViewer : public QWidget {
     Q_OBJECT
+private:
+    void addMenus(QVBoxLayout* mainLayout);
+    void addSensors(QVBoxLayout* sensorLayout);
+    void addData(QHBoxLayout* dataLayout);    // Modifica qui: QVBoxLayout invece di QHBoxLayout
+    void addButtons(QVBoxLayout* buttonLayout); // Modifica qui: QVBoxLayout invece di (QSpacerItem*, QSpacerItem*, QVBoxLayout*)
+    QFrame* addGraph();
 public:
     explicit SensorViewer(QWidget* parent = nullptr);
-signals:
-
+    void showWarning(const QString&);
+    QString showAddDialog();
 };
-
 #endif // SENSORVIEWER_H
