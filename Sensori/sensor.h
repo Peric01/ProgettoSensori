@@ -24,8 +24,17 @@ public:
     void addValue(float value);
     void updateMaxValue();
     void updateMinValue();
+    //clearValues per rimuovere i valori in vector values
+    void clearValues();
     //getCurrentValue per recuperare l'ultimo valore aggiunto
+    float getCurrentValue() const;
     //removeValue per rimuovere un valore preciso
+    void removeValue(float);
     //removeLastValue per eliminare l'ultimo valore aggiunto
+    void removeLastValue();
+    //restartSimulation che fa partire la simulazione da zero nuovamente eliminando i valori vecchi
+    //toString per rappresentare i sensori del file in stringhe
+    std::string toString() const;
+    Sensor* get();
 };
 #endif // SENSOR_H

@@ -39,3 +39,46 @@ float Sensor::getMin() const{
 float Sensor::getMax() const{
     return MaxValue;
 }
+
+void Sensor::clearValues(){
+    values.clear();
+}
+
+float Sensor::getCurrentValue() const{
+    if (values.empty()) {
+        throw std::exception();
+    }
+    return values.back();
+}
+
+void Sensor::removeLastValue() {
+    if (!values.empty()) {
+        values.pop_back();
+    }
+    else
+        throw std::exception();
+}
+
+void Sensor::removeValue(float value){
+    auto it = std::find(values.begin(), values.end(), value);
+    if (it != values.end()) {
+        values.erase(it);
+    }
+}
+
+std::string Sensor::toString() const {
+    std::string result = "Sensor ID: " + std::to_string(SensorID) + "\n";
+    result += "Name: " + Name + "\n";
+    result += "Min Value: " + std::to_string(MinValue) + "\n";
+    result += "Max Value: " + std::to_string(MaxValue) + "\n";
+    result += "Values: ";
+    for (const auto& value : values) {
+        result += std::to_string(value) + " ";
+    }
+    result += "\n";
+    return result;
+}
+
+Sensor* Sensor::get(){
+    return this;
+}

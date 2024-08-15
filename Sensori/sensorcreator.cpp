@@ -11,3 +11,17 @@ PHSensor* SensorCreator::createPH(std::string& n) const{
 TurbSensor* SensorCreator::createTurb(std::string& n) const{
     return new TurbSensor(n);
 }
+
+Sensor* SensorCreator::createSensor(std::string& t){
+    if (t == "temp") {
+        return createTemp(t);
+    } else if (t == "turb") {
+        return createTurb(t);
+    } else if (t == "ph") {
+        return createPH(t);
+    } else {
+        // Handle unknown sensor type
+        return nullptr;
+    }
+}
+
