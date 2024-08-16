@@ -1,5 +1,4 @@
 #include "Model.h"
-#include "sensor.h"
 #include <fstream>
 
 Model::Model() {
