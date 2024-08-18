@@ -11,7 +11,7 @@ public:
     TempSensor* createTemp(std::string& n) const;
     TurbSensor* createTurb(std::string& n) const;
     PHSensor* createPH(std::string& n) const;
-    // serve createSensorFromData(string) per creare sensori da dei dati in un file
+    Sensor* createSensorFromData(const std::string& line);
 };
 
 #endif // SENSORCREATOR_H

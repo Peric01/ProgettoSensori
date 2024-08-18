@@ -82,3 +82,7 @@ std::string Sensor::toString() const {
 Sensor* Sensor::get(){
     return this;
 }
+
+void Sensor::setID(unsigned int newId) {
+    SensorID = newId;
+}

@@ -20,32 +20,32 @@ public:
     ~Model();
 
     // CRUD operations
-    void addSensor(std::string& type);
-    void removeSensor(unsigned int sensorId);
-    Sensor* getSensor(unsigned int sensorId) const;
+    void addSensor(Sensor*);
+    void removeSensor(unsigned int);
+    Sensor* getSensor(unsigned int) const;
     std::vector<Sensor*> getAllSensors() const;
 
     // File operations
-    void saveToFile(const QString& filename) const;
-    void loadFromFile(const QString& filename);
+    void saveToFile(const QString&) const;
+    void loadFromFile(const QString&);
 
     // Simulation
-    void runSimulation(unsigned int sensorId);
-    void restartSimulation(unsigned int sensorId);
+    void runSimulation(unsigned int);
+    void restartSimulation(unsigned int);
 
     // Data management
-    void removeValue(unsigned int sensorId, size_t index);
-    void clearValues(unsigned int sensorId);
+    void removeValue(unsigned int , size_t);
+    void clearValues(unsigned int);
 
 signals:
-    void sensorAdded(Sensor* sensor);
-    void sensorRemoved(unsigned int sensorId);
-    void sensorUpdated(Sensor* sensor);
-    void simulationCompleted(unsigned int sensorId);
-    void dataCleared(unsigned int sensorId);
+    void sensorAdded(Sensor*);
+    void sensorRemoved(unsigned int);
+    void sensorUpdated(Sensor*);
+    void simulationCompleted(unsigned int);
+    void dataCleared(unsigned int);
 
 public slots:
-    void onSimulationRequested(unsigned int sensorId);
+    void onSimulationRequested(unsigned int);
 };
 
 #endif // MODEL_H

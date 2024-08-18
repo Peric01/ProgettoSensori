@@ -36,5 +36,6 @@ public:
     //toString per rappresentare i sensori del file in stringhe
     std::string toString() const;
     Sensor* get();
+    void setID(unsigned int id);
 };
 #endif // SENSOR_H

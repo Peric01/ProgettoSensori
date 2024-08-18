@@ -11,8 +11,9 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Model.cpp \
+    SensorRepository.cpp \
     SensorViewer.cpp \
+    SimulationManager.cpp \
     main.cpp \
     phsensor.cpp \
     sensor.cpp \
@@ -21,8 +22,9 @@ SOURCES += \
     turbsensor.cpp
 
 HEADERS += \
-    Model.h \
+    SensorRepository.h \
     SensorViewer.h \
+    SimulationManager.h \
     phsensor.h \
     sensor.h \
     sensorcreator.h \
