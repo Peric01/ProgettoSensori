@@ -17,6 +17,8 @@
 #include <QtCharts/QValueAxis>
 #include <QDialog>
 #include <qfiledialog.h>
+#include "Sensor.h"
+#include "SensorRepository.h"
 
 
 class SensorViewer : public QWidget {
@@ -24,12 +26,13 @@ class SensorViewer : public QWidget {
 private:
     void addMenus(QVBoxLayout* mainLayout);
     void addSensors(QVBoxLayout* sensorLayout);
-    void addData(QHBoxLayout* dataLayout);    // Modifica qui: QVBoxLayout invece di QHBoxLayout
-    void addButtons(QVBoxLayout* buttonLayout); // Modifica qui: QVBoxLayout invece di (QSpacerItem*, QSpacerItem*, QVBoxLayout*)
+    void addData(QHBoxLayout* dataLayout);
+    void addButtons(QVBoxLayout* buttonLayout);
     QFrame* addGraph();
 public:
     explicit SensorViewer(QWidget* parent = nullptr);
     void showWarning(const QString&);
     QString showAddDialog();
+    void showSensor(Sensor* s);
 };
 #endif // SENSORVIEWER_H

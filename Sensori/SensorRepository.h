@@ -6,6 +6,15 @@
 #include <vector>
 #include <QString>
 #include <QObject>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include "tempsensor.h"
+#include "turbsensor.h"
+#include "phsensor.h"
+
+class Controller;
 
 class SensorRepository : public QObject
 {
@@ -14,10 +23,13 @@ class SensorRepository : public QObject
 private:
     std::vector<Sensor*> sensors;
     SensorCreator sensorCreator;
+    Controller* controller;
 
 public:
     SensorRepository();
     ~SensorRepository();
+
+    void setController(Controller *c);
 
     // CRUD operations
     void addSensor(Sensor* sensor);

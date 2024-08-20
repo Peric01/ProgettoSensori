@@ -4,13 +4,20 @@
 #include "Sensor.h"
 #include <QObject>
 
+class Controller;
+
+
 class SimulationManager : public QObject
 {
     Q_OBJECT
+private:
+    Controller* controller;
 
 public:
     SimulationManager();
     ~SimulationManager();
+
+    void setController(Controller *c);
 
     // Simulation
     void runSimulation(Sensor* sensor);

@@ -4,7 +4,12 @@
 #include <algorithm>
 #include <numeric>
 
-TempSensor::TempSensor(std::string& n) : Sensor(n){}
+TempSensor::TempSensor( u_int id,const QString& name, float value) : Sensor(name.toStdString()) {
+    setID(id);
+    addValue(value);  // Aggiunge il valore iniziale al vector values
+    updateMinValue(); // Aggiorna il valore minimo
+    updateMaxValue(); // Aggiorna il valore massimo
+}
 
 void TempSensor::Simulation() const{
     std::random_device rd;

@@ -51,15 +51,52 @@ void SensorRepository::saveToFile(const QString& filename) const {
     }
 }
 
-void SensorRepository::loadFromFile(const QString& filename) {
-    std::ifstream file(filename.toStdString());
-    if (file.is_open()) {
-        sensors.clear();
-        std::string line;
-        while (std::getline(file, line)) {
-            Sensor* newSensor = sensorCreator.createSensorFromData(line);
-            sensors.push_back(newSensor);
-        }
-        file.close();
+void SensorRepository::loadFromFile(const QString &filePath) {
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning("Couldn't open the file.");
+        return;
+    }
+
+    QByteArray jsonData = file.readAll();
+    file.close();
+
+    QJsonDocument doc = QJsonDocument::fromJson(jsonData);
+    QJsonObject jsonObj = doc.object();
+
+    // Caricamento sensori di temperatura
+    QJsonArray temperatureArray = jsonObj["temperatureSensors"].toArray();
+    for (const QJsonValue &value : temperatureArray) {
+        QJsonObject obj = value.toObject();
+        Sensor* sensor = new TempSensor(
+            obj["id"].toInt(),
+            obj["name"].toString(),
+            static_cast<float>(obj["value"].toDouble())  // Conversione a float
+            );
+        sensors.push_back(sensor);
+    }
+
+    // Caricamento sensori di torbidità
+    QJsonArray turbidityArray = jsonObj["turbiditySensors"].toArray();
+    for (const QJsonValue &value : turbidityArray) {
+        QJsonObject obj = value.toObject();
+        Sensor* sensor = new TurbSensor(
+            obj["id"].toInt(),
+            obj["name"].toString(),
+            obj["value"].toDouble()
+            );
+        sensors.push_back(sensor);
+    }
+
+    // Caricamento sensori di pH
+    QJsonArray phArray = jsonObj["phSensors"].toArray();
+    for (const QJsonValue &value : phArray) {
+        QJsonObject obj = value.toObject();
+        Sensor* sensor = new PHSensor(
+            obj["id"].toInt(),
+            obj["name"].toString(),
+            obj["value"].toDouble()
+            );
+        sensors.push_back(sensor);
     }
 }

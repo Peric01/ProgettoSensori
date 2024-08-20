@@ -115,6 +115,13 @@ QFrame* SensorViewer::addGraph()
     return graphFrame;
 }
 
+void SensorViewer::showSensor(Sensor* s){
+    // diviso in due parti destra e sinistra per dati statici e dati dinamici
+    // bisogna poi metterlo in data and buttons in sensorviewer
+    QHBoxLayout* Data = new QHBoxLayout;
+
+}
+
 SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     QVBoxLayout* mainLayout = new QVBoxLayout;
 
@@ -139,7 +146,7 @@ SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     addSensors(sensorLayout);
 
     // Aggiungi i dati e i pulsanti
-    addData(dataAndButtonsLayout);
+    addData(showSensor());
     addButtons(buttonLayout);
 
     dataAndButtonsLayout->addLayout(buttonLayout); // Aggiungi i pulsanti a destra dei dati
@@ -174,3 +181,5 @@ QString SensorViewer::showAddDialog(){
         throw std::runtime_error("Nessun file scelto: aggiunta annullata");
     return fileName;
 }
+
+

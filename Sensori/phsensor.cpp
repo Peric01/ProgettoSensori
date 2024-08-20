@@ -30,4 +30,9 @@ void PHSensor::Simulation() const{
 }
 
 
-PHSensor::PHSensor(const std::string& n) : Sensor(n){}
+PHSensor::PHSensor(u_int id, const QString& name, float value) : Sensor(name.toStdString()) {
+    setID(id);
+    addValue(value);  // Aggiunge il valore iniziale al vector values
+    updateMinValue(); // Aggiorna il valore minimo
+    updateMaxValue(); // Aggiorna il valore massimo
+}
