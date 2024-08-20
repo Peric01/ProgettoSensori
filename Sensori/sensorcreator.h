@@ -8,7 +8,7 @@ class SensorCreator
 {
 public:
     Sensor* createSensor(std::string& t);
-    TempSensor* createTemp(std::string& n) const;
+    TempSensor* createTemp(const QString& n) const;
     TurbSensor* createTurb(std::string& n) const;
     PHSensor* createPH(std::string& n) const;
     Sensor* createSensorFromData(const std::string& line);

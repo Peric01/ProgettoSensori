@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <numeric>
 
-TempSensor::TempSensor( u_int id,const QString& name, float value) : Sensor(name.toStdString()) {
+TempSensor::TempSensor(u_int id, const QString& name,  float value) : Sensor(name.toStdString()) {
     setID(id);
     addValue(value);  // Aggiunge il valore iniziale al vector values
     updateMinValue(); // Aggiorna il valore minimo

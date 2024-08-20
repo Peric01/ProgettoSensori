@@ -38,7 +38,7 @@ Sensor* SensorCreator::createSensorFromData(const std::string& line) {
     return sensor;
 }
 
-TempSensor* SensorCreator::createTemp(std::string& n) const{
+TempSensor* SensorCreator::createTemp(const QString& n) const{
     return new TempSensor(n);
 }
 
@@ -51,7 +51,7 @@ TurbSensor* SensorCreator::createTurb(std::string& n) const{
 }
 
 Sensor* SensorCreator::createSensor(std::string& t){
-    if (t == "temp") {
+    /*    if (t == "temp") {
         return createTemp(t);
     } else if (t == "turb") {
         return createTurb(t);
@@ -60,6 +60,6 @@ Sensor* SensorCreator::createSensor(std::string& t){
     } else {
         // Handle unknown sensor type
         return nullptr;
-    }
+    }*/
 }
 
