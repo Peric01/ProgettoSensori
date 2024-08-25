@@ -38,28 +38,34 @@ Sensor* SensorCreator::createSensorFromData(const std::string& line) {
     return sensor;
 }
 
-TempSensor* SensorCreator::createTemp(const QString& n) const{
-    return new TempSensor(n);
+
+PHSensor* SensorCreator::createPH(const QString& n) const {
+    u_int id = 1; // Example default ID
+    float value = 0.0; // Example default value
+    return new PHSensor(id, n, value);
 }
 
-PHSensor* SensorCreator::createPH(std::string& n) const{
-    return new PHSensor(n);
+TurbSensor* SensorCreator::createTurb(const QString& n) const {
+    u_int id = 1; // Example default ID
+    float value = 0.0; // Example default value
+    return new TurbSensor(id, n, value);
 }
 
-TurbSensor* SensorCreator::createTurb(std::string& n) const{
-    return new TurbSensor(n);
+TempSensor* SensorCreator::createTemp(const QString& n) const {
+    u_int id = 1; // Example default ID
+    float value = 0.0; // Example default value
+    return new TempSensor(id, n, value);
 }
 
-Sensor* SensorCreator::createSensor(std::string& t){
-    /*    if (t == "temp") {
-        return createTemp(t);
+Sensor* SensorCreator::createSensor(const std::string& t) const {
+    if (t == "temp") {
+        return createTemp("DefaultName"); // Replace "DefaultName" with the desired name
     } else if (t == "turb") {
-        return createTurb(t);
+        return createTurb("DefaultName"); // Adjust as necessary
     } else if (t == "ph") {
-        return createPH(t);
+        return createPH("DefaultName"); // Adjust as necessary
     } else {
         // Handle unknown sensor type
         return nullptr;
-    }*/
+    }
 }
-

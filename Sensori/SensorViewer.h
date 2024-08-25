@@ -18,12 +18,14 @@
 #include <QDialog>
 #include <qfiledialog.h>
 #include "Sensor.h"
-#include "SensorRepository.h"
-
+class Controller;
 
 class SensorViewer : public QWidget {
     Q_OBJECT
 private:
+    QFrame* info;
+    Controller* controller;
+
     void addMenus(QVBoxLayout* mainLayout);
     void addSensors(QVBoxLayout* sensorLayout);
     void addData(QHBoxLayout* dataLayout);
@@ -33,6 +35,10 @@ public:
     explicit SensorViewer(QWidget* parent = nullptr);
     void showWarning(const QString&);
     QString showAddDialog();
-    void showSensor(Sensor* s);
+    void showSensor(Sensor*);
+    void clearLayout(QLayout*) const;
+    void setController(Controller*);
+    //addDialog
+    //removeDialog
 };
 #endif // SENSORVIEWER_H

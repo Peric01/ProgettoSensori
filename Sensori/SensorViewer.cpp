@@ -1,4 +1,59 @@
 #include "SensorViewer.h"
+#include "TempSensor.h"
+#include "TurbSensor.h"
+#include "PHSensor.h"
+
+void SensorViewer::clearLayout(QLayout* layout) const{
+    QLayoutItem* item;
+    while((item = layout->takeAt(0))){
+        if(item->layout()){
+            clearLayout(item->layout());
+        }
+        if(item->widget()){
+            delete item->widget();
+        }
+        delete item;
+    }
+}
+//Ripuliamo il layout dati dal sensore precedente -> clearLayout(Layout*)
+//recuperiamo i dati da mostrare
+//Li mostriamo a schermo nel layout
+void SensorViewer::showSensor(Sensor* s) {
+    // Ripuliamo il layout dati dal sensore precedente
+    clearLayout(info->layout());
+
+    // Creiamo delle QLabel per mostrare le informazioni del sensore
+    QLabel* nameLabel = new QLabel("Nome: " + QString::fromStdString(s->getName()), this);
+    QLabel* idLabel = new QLabel("ID: " + QString::number(s->getID()), this);
+    QLabel* minValueLabel = new QLabel("Valore Minimo: " + QString::number(s->getMin()), this);
+    QLabel* maxValueLabel = new QLabel("Valore Massimo: " + QString::number(s->getMax()), this);
+    QLabel* currentValueLabel = new QLabel("Valore Corrente: " + QString::number(s->getCurrentValue()), this);
+
+    // Aggiungiamo le QLabel al layout principale
+    info->layout()->addWidget(nameLabel);
+    info->layout()->addWidget(idLabel);
+    info->layout()->addWidget(minValueLabel);
+    info->layout()->addWidget(maxValueLabel);
+    info->layout()->addWidget(currentValueLabel);
+
+    // Determiniamo il tipo di sensore e aggiungiamo le informazioni specifiche
+    if (TempSensor* tp = dynamic_cast<TempSensor*>(s)) {
+        QLabel* unitLabel = new QLabel(QString::number(tp->getCurrentValue()) + " °C", this);
+        info->layout()->addWidget(unitLabel);
+    }
+    else if (TurbSensor* tb = dynamic_cast<TurbSensor*>(s)) {
+        QLabel* turbidityLabel = new QLabel("Torbidità: " + QString::number(tb->getCurrentValue()), this);
+        info->layout()->addWidget(turbidityLabel);
+    }
+    else if (PHSensor* ph = dynamic_cast<PHSensor*>(s)) {
+        QLabel* phLabel = new QLabel("pH: " + QString::number(ph->getCurrentValue()), this);
+        info->layout()->addWidget(phLabel);
+    }
+
+    // Aggiorniamo la visualizzazione
+    info->layout()->update();
+}
+
 
 void SensorViewer::addMenus(QVBoxLayout* mainLayout)
 {
@@ -115,12 +170,6 @@ QFrame* SensorViewer::addGraph()
     return graphFrame;
 }
 
-void SensorViewer::showSensor(Sensor* s){
-    // diviso in due parti destra e sinistra per dati statici e dati dinamici
-    // bisogna poi metterlo in data and buttons in sensorviewer
-    QHBoxLayout* Data = new QHBoxLayout;
-
-}
 
 SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     QVBoxLayout* mainLayout = new QVBoxLayout;
@@ -146,7 +195,7 @@ SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     addSensors(sensorLayout);
 
     // Aggiungi i dati e i pulsanti
-    addData(showSensor());
+    addData(dataAndButtonsLayout);
     addButtons(buttonLayout);
 
     dataAndButtonsLayout->addLayout(buttonLayout); // Aggiungi i pulsanti a destra dei dati
@@ -181,5 +230,11 @@ QString SensorViewer::showAddDialog(){
         throw std::runtime_error("Nessun file scelto: aggiunta annullata");
     return fileName;
 }
+
+void SensorViewer::setController(Controller* c){
+    controller = c;
+    connect(info->actions()[0]), SIGNAL(triggered()),this.SLOT(close());
+}
+
 
 

@@ -2,7 +2,7 @@
 #define CONTROLLER_H
 
 #include <QObject>
-#include "QTimer"
+#include <QTimer>
 #include "SensorViewer.h"
 #include "SimulationManager.h"
 #include "SensorRepository.h"
@@ -24,6 +24,16 @@ public:
     void setRepo(SensorRepository* r);
     void setManager(SimulationManager* m);
     void setView(SensorViewer* v);
+    void show();
+    void add();
+    void remove();
+    void Simulation();
+    void selectSensor();
+    //show
+    //add
+    //remove
+    //Simulation
+    //seleziona sensore
 
 signals:
 };

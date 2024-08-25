@@ -28,7 +28,11 @@ void SensorRepository::removeSensor(unsigned int sensorId) {
     }
 }
 
-Sensor* SensorRepository::getSensor(unsigned int sensorId) const {
+Sensor* SensorRepository::getSensor() const{
+    return *(sensors.begin());
+}
+
+Sensor* SensorRepository::searchSensor(unsigned int sensorId) const {
     for (const auto& sensor : sensors) {
         if (sensor->getID() == sensorId) {
             return sensor;

@@ -10,10 +10,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-#include "tempsensor.h"
-#include "turbsensor.h"
-#include "phsensor.h"
-
 class Controller;
 
 class SensorRepository : public QObject
@@ -34,9 +30,9 @@ public:
     // CRUD operations
     void addSensor(Sensor* sensor);
     void removeSensor(unsigned int sensorId);
-    Sensor* getSensor(unsigned int sensorId) const;
+    Sensor* searchSensor(unsigned int sensorId) const;
     std::vector<Sensor*> getAllSensors() const;
-
+    Sensor* getSensor() const;
     // File operations
     void saveToFile(const QString& filename) const;
     void loadFromFile(const QString& filename);
