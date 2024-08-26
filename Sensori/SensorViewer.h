@@ -25,6 +25,10 @@ class SensorViewer : public QWidget {
 private:
     QFrame* info;
     Controller* controller;
+    QPushButton* saveButton;
+    QPushButton* modifyButton;
+    QPushButton* deleteButton;
+    QPushButton* runSimulationButton;
 
     void addMenus(QVBoxLayout* mainLayout);
     void addSensors(QVBoxLayout* sensorLayout);

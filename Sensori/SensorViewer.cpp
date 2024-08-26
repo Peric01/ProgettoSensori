@@ -148,7 +148,7 @@ void SensorViewer::addData(QHBoxLayout* dataLayout)
 
 void SensorViewer::addButtons(QVBoxLayout* buttonLayout)
 {
-    QPushButton* saveButton = new QPushButton("Salva", this);
+    saveButton = new QPushButton("Salva", this);
     QPushButton* modifyButton = new QPushButton("Modifica", this);
     QPushButton* deleteButton = new QPushButton("Elimina", this);
     QPushButton* runSimulationButton = new QPushButton("Lancia Simulazione", this);
@@ -242,6 +242,14 @@ QString SensorViewer::showAddDialog(){
 void SensorViewer::setController(Controller* c) {
     controller = c;
 
+    connect(saveButton, SIGNAL(clicked(bool)), controller, SLOT(save()));
+
+    /*
+    connect(deleteButton, SIGNAL(clicked(bool)), controller, SLOT(remove()));
+    connect(modifyButton, SIGNAL(clicked(bool)), controller, SLOT(modify()));
+
+    connect(runSimulationButton, SIGNAL(clicked(bool)), controller, SLOT(Simulation()));*/
+    /*
     // Connessione azioni del menu a slot del Controller
     auto actions = findChildren<QAction*>();
     for (auto* action : actions) {
@@ -268,8 +276,10 @@ void SensorViewer::setController(Controller* c) {
             });
         }
     }
+    */
 
     // Connessione azioni dei pulsanti
+    /*
     connect(findChild<QPushButton*>("Salva"), &QPushButton::clicked, controller, &Controller::save);
     connect(findChild<QPushButton*>("Modifica"), &QPushButton::clicked, [this]() {
         unsigned int id = showSelectDialog();
@@ -285,6 +295,7 @@ void SensorViewer::setController(Controller* c) {
         unsigned int id = showSelectDialog();
         controller->runSimulation(id);
     });
+    */
 }
 
 

@@ -1,6 +1,7 @@
 #include "Controller.h"
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QFileDialog>
 
 Controller::Controller(QObject *parent)
     : QObject(parent), autoMode(false), timer(new QTimer) {
@@ -166,17 +167,22 @@ void Controller::onSimulationRequested() {
 
 void Controller::save() {
     // Implementazione per salvare lo stato
-    qDebug() << "Save action triggered";
+    //qDebug() << "Save action triggered";
+
+    QFileDialog dialog(view, "Salva boh", "", "JSON file (*.json)");
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    dialog.setDefaultSuffix("json");
+    dialog.exec();
 }
 
 void Controller::open() {
     // Implementazione per aprire un file
-    qDebug() << "Open action triggered";
+    //qDebug() << "Open action triggered";
 }
 
 void Controller::close() {
     // Implementazione per chiudere il file
-    qDebug() << "Close action triggered";
+    //qDebug() << "Close action triggered";
 }
 
 
@@ -193,6 +199,6 @@ void Controller::addSensor(const QString& sensorType, unsigned int id, const QSt
     }
     if (sensor) {
         // Aggiungi sensore al repository (da implementare)
-        emit sensorAdded(sensor);
+        //emit sensorAdded(sensor);
     }
 }

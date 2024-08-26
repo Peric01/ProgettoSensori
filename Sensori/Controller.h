@@ -39,7 +39,7 @@ public slots:
     void onModifyRequested();
     void onDeleteRequested();
     void onSimulationRequested();
-    void sensorAdded(Sensor* sensor);
+    //void sensorAdded(Sensor* sensor);
 };
 
 #endif // CONTROLLER_H
