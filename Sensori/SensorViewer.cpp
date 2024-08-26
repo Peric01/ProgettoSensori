@@ -2,6 +2,8 @@
 #include "TempSensor.h"
 #include "TurbSensor.h"
 #include "PHSensor.h"
+#include "Controller.h"
+#include <QInputDialog>
 
 void SensorViewer::clearLayout(QLayout* layout) const{
     QLayoutItem* item;
@@ -151,11 +153,17 @@ void SensorViewer::addButtons(QVBoxLayout* buttonLayout)
     QPushButton* deleteButton = new QPushButton("Elimina", this);
     QPushButton* runSimulationButton = new QPushButton("Lancia Simulazione", this);
 
+    saveButton->setObjectName("saveButton");
+    modifyButton->setObjectName("modifyButton");
+    deleteButton->setObjectName("deleteButton");
+    runSimulationButton->setObjectName("runSimulationButton");
+
     buttonLayout->addWidget(saveButton);
     buttonLayout->addWidget(modifyButton);
     buttonLayout->addWidget(deleteButton);
     buttonLayout->addWidget(runSimulationButton);
 }
+
 
 QFrame* SensorViewer::addGraph()
 {
@@ -231,10 +239,88 @@ QString SensorViewer::showAddDialog(){
     return fileName;
 }
 
-void SensorViewer::setController(Controller* c){
+void SensorViewer::setController(Controller* c) {
     controller = c;
-    connect(info->actions()[0]), SIGNAL(triggered()),this.SLOT(close());
+
+    // Connessione azioni del menu a slot del Controller
+    auto actions = findChildren<QAction*>();
+    for (auto* action : actions) {
+        if (action->text() == "Salva") {
+            connect(action, &QAction::triggered, controller, &Controller::save);
+        } else if (action->text() == "Apri") {
+            connect(action, &QAction::triggered, controller, &Controller::open);
+        } else if (action->text() == "Chiudi") {
+            connect(action, &QAction::triggered, controller, &Controller::close);
+        } else if (action->text() == "Temperatura") {
+            connect(action, &QAction::triggered, [this]() {
+                QString name = showAddDialog();
+                controller->addSensor("Temperatura", 1, name, 0.0f);  // Esempio
+            });
+        } else if (action->text() == "Torbidità") {
+            connect(action, &QAction::triggered, [this]() {
+                QString name = showAddDialog();
+                controller->addSensor("Torbidità", 1, name, 0.0f);  // Esempio
+            });
+        } else if (action->text() == "pH") {
+            connect(action, &QAction::triggered, [this]() {
+                QString name = showAddDialog();
+                controller->addSensor("pH", 1, name, 0.0f);  // Esempio
+            });
+        }
+    }
+
+    // Connessione azioni dei pulsanti
+    connect(findChild<QPushButton*>("Salva"), &QPushButton::clicked, controller, &Controller::save);
+    connect(findChild<QPushButton*>("Modifica"), &QPushButton::clicked, [this]() {
+        unsigned int id = showSelectDialog();
+        QString name = "Nuovo Nome";  // Modifica il nome del sensore
+        float value = 0.0f;           // Nuovo valore del sensore
+        controller->modifySensor(id, name, value);
+    });
+    connect(findChild<QPushButton*>("Elimina"), &QPushButton::clicked, [this]() {
+        unsigned int id = showRemoveDialog();
+        controller->removeSensor(id);
+    });
+    connect(findChild<QPushButton*>("Lancia Simulazione"), &QPushButton::clicked, [this]() {
+        unsigned int id = showSelectDialog();
+        controller->runSimulation(id);
+    });
 }
 
 
+unsigned int SensorViewer::showRemoveDialog() {
+    // Implementa un dialogo per selezionare il sensore da rimuovere
+    bool ok;
+    unsigned int sensorId = QInputDialog::getInt(this, tr("Rimuovi Sensore"),
+                                                 tr("Inserisci l'ID del sensore:"), 1, 0, 100, 1, &ok);
+    if (ok) {
+        return sensorId;
+    } else {
+        throw std::runtime_error("Rimozione annullata");
+    }
+}
+
+unsigned int SensorViewer::showSelectDialog() {
+    // Implementa un dialogo per selezionare un sensore
+    bool ok;
+    unsigned int sensorId = QInputDialog::getInt(this, tr("Seleziona Sensore"),
+                                                 tr("Inserisci l'ID del sensore:"), 1, 0, 100, 1, &ok);
+    if (ok) {
+        return sensorId;
+    } else {
+        throw std::runtime_error("Selezione annullata");
+    }
+}
+
+unsigned int SensorViewer::showSearchDialog() {
+    // Implementa un dialogo per cercare un sensore
+    bool ok;
+    unsigned int sensorId = QInputDialog::getInt(this, tr("Cerca Sensore"),
+                                                 tr("Inserisci l'ID del sensore:"), 1, 0, 100, 1, &ok);
+    if (ok) {
+        return sensorId;
+    } else {
+        throw std::runtime_error("Ricerca annullata");
+    }
+}
 

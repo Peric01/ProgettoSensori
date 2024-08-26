@@ -38,6 +38,9 @@ public:
     void showSensor(Sensor*);
     void clearLayout(QLayout*) const;
     void setController(Controller*);
+    unsigned int showRemoveDialog();
+    unsigned int showSelectDialog();
+    unsigned int showSearchDialog();
     //addDialog
     //removeDialog
 };
