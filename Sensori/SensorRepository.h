@@ -31,6 +31,7 @@ public:
     void addSensor(Sensor* sensor);
     void removeSensor(unsigned int sensorId);
     Sensor* searchSensor(unsigned int sensorId) const;
+    bool getEmpty();
     std::vector<Sensor*> getAllSensors() const;
     Sensor* getSensor() const;
     // File operations

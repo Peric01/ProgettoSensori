@@ -36,6 +36,7 @@ float Sensor::getMin() const{
     return MinValue;
 }
 
+
 float Sensor::getMax() const{
     return MaxValue;
 }

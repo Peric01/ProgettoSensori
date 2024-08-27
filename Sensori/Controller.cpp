@@ -14,16 +14,7 @@ void Controller::setView(SensorViewer* v) {view = v;}
 
 Controller::~Controller() {delete timer;}
 
-void Controller::show() const{
-    Sensor* s = Repo->getSensor();
-    view->showSensor(s);
-}
-
-
-
-
-
-void Controller::add() const{
+void Controller::add(){
     // Mostra un dialogo per selezionare il tipo di sensore
     bool ok;
     QString sensorType = QInputDialog::getItem(nullptr, "Seleziona Tipo di Sensore",
@@ -36,16 +27,33 @@ void Controller::add() const{
     }
 
     // Mostra un dialogo per inserire l'ID del sensore
-    unsigned int id = QInputDialog::getInt(nullptr, "Inserisci ID del Sensore",
-                                           "ID del sensore:", 1, 1, 10000, 1, &ok);
-    if (!ok) {
-        QMessageBox::warning(nullptr, "Aggiunta Annulata", "ID non valido.");
-        return;
+    bool cercaNuovoId = true;
+    unsigned int id;
+    while(cercaNuovoId)
+    {
+        id = QInputDialog::getInt(nullptr, "Inserisci ID del Sensore",
+                                               "ID del sensore:", 1, 1, 10000, 1, &ok);
+        if (!ok) {
+            QMessageBox::warning(nullptr, "Aggiunta Annulata", "ID non valido.");
+            return;
+        }
+
+        // Controllo che l'id non sia già assegnato ad un altro sensore
+        cercaNuovoId = false;
+        for(auto s : Repo->getAllSensors())
+        {
+            if(s->getID() == id)
+            {
+                cercaNuovoId = true;
+                QMessageBox::warning(nullptr, "Aggiunta Annulata", "ID già utilizzato.");
+            }
+        }
     }
 
     // Mostra un dialogo per inserire il nome del sensore
+    QString placeholder = "Sensore " + QString::number(id);
     QString name = QInputDialog::getText(nullptr, "Inserisci Nome del Sensore",
-                                         "Nome del sensore:", QLineEdit::Normal, "", &ok);
+                                         "Nome del sensore:", QLineEdit::Normal, placeholder, &ok);
     if (!ok || name.isEmpty()) {
         QMessageBox::warning(nullptr, "Aggiunta Annulata", "Nome non valido.");
         return;
@@ -72,18 +80,12 @@ void Controller::add() const{
     if (newSensor) {
         // Aggiungi il sensore al repository (presumendo esista una struttura per memorizzare sensori)
         Repo->addSensor(newSensor);
-
+        selectedSensor = newSensor;
         // Notifica il SensorViewer dell'aggiunta del nuovo sensore
         if (view) {
             view->showSensor(newSensor);
+            view->showSensorLists(Repo->getAllSensors());
         }
-
-        // Aggiorna la vista o l'interfaccia utente come necessario
-        // ...
-
-        // Non dimenticare di liberare la memoria quando il sensore non è più necessario.
-        // Questo dipende da come gestisci la vita degli oggetti sensori nel tuo repository.
-        // Se `sensorRepository` possiede la responsabilità di liberare la memoria, non fare nulla qui.
     } else {
         QMessageBox::warning(nullptr, "Errore", "Impossibile creare il sensore.");
     }
@@ -91,36 +93,52 @@ void Controller::add() const{
 
 
 void Controller::remove() const {
-    try {
+    try
+    {
         unsigned int sensorId = view->showRemoveDialog();  // Supponendo che la vista mostri un dialogo per scegliere il sensore da rimuovere
         Repo->removeSensor(sensorId);
-    } catch (std::runtime_error& exc) {
+        Sensor* s = Repo->getSensor();
+        view->showSensor(s);  // Aggiorna la visualizzazione dei sensori
+        view->showSensorLists(Repo->getAllSensors());
+    }
+    catch (std::runtime_error exc)
+    {
         view->showWarning(exc.what());
     }
-    show();  // Aggiorna la visualizzazione dei sensori
 }
 
-void Controller::Simulation(unsigned int sensorId) {
-    // Recupera il sensore dal repository
-    Sensor* sensor = Repo->searchSensor(sensorId);
+void Controller::Simulation() {
 
-    if (!sensor) {
-        QMessageBox::warning(nullptr, "Errore", "Sensore non trovato.");
-        return;
+    try
+    {
+        unsigned int sensorId = view->showSelectDialog();  // Supponendo che la vista mostri un dialogo per scegliere il sensore da simulare
+
+        // Recupera il sensore dal repository
+        Sensor* sensor = Repo->searchSensor(sensorId);
+
+        if (!sensor) {
+            QMessageBox::warning(nullptr, "Errore", "Sensore non trovato.");
+            return;
+        }
+
+        // Avvia la simulazione usando il SimulationManager
+        Manager->runSimulation(sensor);
+
+        // Se necessario, aggiorna la vista o esegui altre operazioni
+        // ...
     }
-
-    // Avvia la simulazione usando il SimulationManager
-    Manager->runSimulation(sensor);
-
-    // Se necessario, aggiorna la vista o esegui altre operazioni
-    // ...
+    catch (std::runtime_error exc)
+    {
+        view->showWarning(exc.what());
+    }
 }
 
-void Controller::selectSensor() const {
+void Controller::selectSensor() {
     try {
         unsigned int sensorId = view->showSelectDialog();  // Dialogo per selezionare il sensore
         Sensor* sensor = Repo->searchSensor(sensorId);
         if (sensor) {
+            selectedSensor = sensor;
             view->showSensor(sensor);
         } else {
             view->showWarning("Sensor not found.");
@@ -130,7 +148,43 @@ void Controller::selectSensor() const {
     }
 }
 
-void Controller::search() const {
+void Controller::popValue(){
+    try{
+        if(Repo->getEmpty()){/*crasha da aggiustare*/
+        }
+        else{
+            selectedSensor->removeLastValue();
+            selectedSensor->updateMaxValue();
+            selectedSensor->updateMinValue();
+            view->showSensor(selectedSensor);  // Aggiorna la visualizzazione dei sensori
+            view->showSensorLists(Repo->getAllSensors());
+        }
+    }  catch (std::runtime_error& exc) {
+        view->showWarning(exc.what());
+    }
+}
+
+void Controller::pushValue(){
+    try{
+        if(!selectedSensor){
+            return;
+        }
+        else{
+            float valuetoAdd = view->showValueDialog();
+            selectedSensor->addValue(valuetoAdd);
+            selectedSensor->updateMaxValue();
+            selectedSensor->updateMinValue();
+            view->showSensor(selectedSensor);  // Aggiorna la visualizzazione dei sensori
+            view->showSensorLists(Repo->getAllSensors());
+        }
+
+    }  catch (std::runtime_error& exc) {
+        view->showWarning(exc.what());
+    }
+}
+
+
+/*void Controller::search() const {
     try {
         unsigned int sensorId = view->showSearchDialog();  // Dialogo per cercare il sensore
         Sensor* sensor = Repo->searchSensor(sensorId);
@@ -142,19 +196,8 @@ void Controller::search() const {
     } catch (std::runtime_error& exc) {
         view->showWarning(exc.what());
     }
-}
+}*/
 
-void Controller::onSaveRequested() {
-    QMessageBox::information(nullptr, "Salvataggio", "Funzionalità di salvataggio non implementata.");
-}
-
-void Controller::onModifyRequested() {
-    QMessageBox::information(nullptr, "Modifica", "Funzionalità di modifica non implementata.");
-}
-
-void Controller::onDeleteRequested() {
-    QMessageBox::information(nullptr, "Eliminazione", "Funzionalità di eliminazione non implementata.");
-}
 
 void Controller::onSimulationRequested() {
     // Implementa la logica per avviare una simulazione
@@ -165,40 +208,32 @@ void Controller::onSimulationRequested() {
     }
 }
 
+void Controller::open() {
+    try
+    {
+
+    }
+    catch (std::runtime_error exc)
+    {
+        view->showWarning(exc.what());
+    }
+}
+
 void Controller::save() {
     // Implementazione per salvare lo stato
     //qDebug() << "Save action triggered";
-
-    QFileDialog dialog(view, "Salva boh", "", "JSON file (*.json)");
+    try{
+    QFileDialog dialog(view, "Salva i sensori", "", "JSON file (*.json)");
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     dialog.setDefaultSuffix("json");
     dialog.exec();
-}
-
-void Controller::open() {
-    // Implementazione per aprire un file
-    //qDebug() << "Open action triggered";
+    } catch(std::runtime_error exc)
+    {
+        view->showWarning(exc.what());
+    }
 }
 
 void Controller::close() {
-    // Implementazione per chiudere il file
-    //qDebug() << "Close action triggered";
+    QCoreApplication::quit();
 }
 
-
-void Controller::addSensor(const QString& sensorType, unsigned int id, const QString& name, float value) {
-    // Implementazione per aggiungere un sensore
-    // Esempio:
-    Sensor* sensor = nullptr;
-    if (sensorType == "Temperatura") {
-        sensor = new TempSensor(id, name, value);
-    } else if (sensorType == "Torbidità") {
-        sensor = new TurbSensor(id, name, value);
-    } else if (sensorType == "pH") {
-        sensor = new PHSensor(id, name, value);
-    }
-    if (sensor) {
-        // Aggiungi sensore al repository (da implementare)
-        //emit sensorAdded(sensor);
-    }
-}

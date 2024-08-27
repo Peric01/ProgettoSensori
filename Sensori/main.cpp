@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
     Controller c;
     SensorRepository r;
     SimulationManager m;
+    w.showSensorLists(r.getAllSensors()); // non so se va bene, servirebbe per aggiornare la vista appena parte e mettere i colori
     c.setView(&w);
     c.setRepo(&r);
     c.setManager(&m);

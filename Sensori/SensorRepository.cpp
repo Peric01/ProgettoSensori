@@ -28,7 +28,14 @@ void SensorRepository::removeSensor(unsigned int sensorId) {
     }
 }
 
+bool SensorRepository::getEmpty(){
+    return sensors.empty();
+}
+
 Sensor* SensorRepository::getSensor() const{
+
+    if(sensors.empty())
+        throw std::runtime_error("Nessun sensore disponibile");
     return *(sensors.begin());
 }
 

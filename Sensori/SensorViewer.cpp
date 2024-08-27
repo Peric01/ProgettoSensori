@@ -4,6 +4,8 @@
 #include "PHSensor.h"
 #include "Controller.h"
 #include <QInputDialog>
+#include <QPalette>
+#include <QColor>
 
 void SensorViewer::clearLayout(QLayout* layout) const{
     QLayoutItem* item;
@@ -17,12 +19,12 @@ void SensorViewer::clearLayout(QLayout* layout) const{
         delete item;
     }
 }
-//Ripuliamo il layout dati dal sensore precedente -> clearLayout(Layout*)
-//recuperiamo i dati da mostrare
-//Li mostriamo a schermo nel layout
+
+
 void SensorViewer::showSensor(Sensor* s) {
-    // Ripuliamo il layout dati dal sensore precedente
-    clearLayout(info->layout());
+    // Ripuliamo i layout dati dal sensore precedente
+    clearLayout(staticBox);
+    clearLayout(editableBox);
 
     // Creiamo delle QLabel per mostrare le informazioni del sensore
     QLabel* nameLabel = new QLabel("Nome: " + QString::fromStdString(s->getName()), this);
@@ -32,28 +34,49 @@ void SensorViewer::showSensor(Sensor* s) {
     QLabel* currentValueLabel = new QLabel("Valore Corrente: " + QString::number(s->getCurrentValue()), this);
 
     // Aggiungiamo le QLabel al layout principale
-    info->layout()->addWidget(nameLabel);
-    info->layout()->addWidget(idLabel);
-    info->layout()->addWidget(minValueLabel);
-    info->layout()->addWidget(maxValueLabel);
-    info->layout()->addWidget(currentValueLabel);
+    staticBox->addWidget(nameLabel);
+    staticBox->addWidget(idLabel);
+
+    editableBox->addWidget(minValueLabel);
+    editableBox->addWidget(maxValueLabel);
+    editableBox->addWidget(currentValueLabel);
 
     // Determiniamo il tipo di sensore e aggiungiamo le informazioni specifiche
+    QString type = "Tipo: ";
+    TempSensor* tp = dynamic_cast<TempSensor*>(s);
+    TurbSensor* tb = dynamic_cast<TurbSensor*>(s);
+    PHSensor* ph = dynamic_cast<PHSensor*>(s);
+    if (tp) {
+        type += "Temperatura";
+    }
+    else if (tb) {
+        type += "Torbidità";
+    }
+    else if (ph) {
+        type += "pH";
+    }
+
+    QLabel* typeLabel = new QLabel(type, this);
+    staticBox->addWidget(typeLabel);
+
+
+    /*
     if (TempSensor* tp = dynamic_cast<TempSensor*>(s)) {
         QLabel* unitLabel = new QLabel(QString::number(tp->getCurrentValue()) + " °C", this);
-        info->layout()->addWidget(unitLabel);
+        staticBox->addWidget(unitLabel);
     }
     else if (TurbSensor* tb = dynamic_cast<TurbSensor*>(s)) {
         QLabel* turbidityLabel = new QLabel("Torbidità: " + QString::number(tb->getCurrentValue()), this);
-        info->layout()->addWidget(turbidityLabel);
+        staticBox->addWidget(turbidityLabel);
     }
     else if (PHSensor* ph = dynamic_cast<PHSensor*>(s)) {
         QLabel* phLabel = new QLabel("pH: " + QString::number(ph->getCurrentValue()), this);
-        info->layout()->addWidget(phLabel);
+        staticBox->addWidget(phLabel);
     }
+    */
 
     // Aggiorniamo la visualizzazione
-    info->layout()->update();
+    staticBox->update();
 }
 
 
@@ -62,17 +85,25 @@ void SensorViewer::addMenus(QVBoxLayout* mainLayout)
     QMenuBar* menuBar = new QMenuBar(this);
     QMenu* file = new QMenu("File", menuBar);
     menuBar->addMenu(file);
-    QMenu* NewSensor = new QMenu("Aggiungi Sensore", menuBar);
+    QMenu* NewSensor = new QMenu("Gestione Sensori", menuBar);
     menuBar->addMenu(NewSensor);
 
     // Menu/Gestione File
-    file->addAction(new QAction("Salva", file));
-    file->addAction(new QAction("Apri", file));
-    file->addAction(new QAction("Chiudi", file));
+    saveAction = new QAction("Salva", file);
+    openAction = new QAction("Apri", file);
+    closeAction = new QAction("Chiudi", file);
+
+    file->addAction(saveAction);
+    file->addAction(openAction);
+    file->addAction(closeAction);
+
     // Menu/Aggiunta Sensori
-    NewSensor->addAction(new QAction("Temperatura", NewSensor));
-    NewSensor->addAction(new QAction("Torbidità", NewSensor));
-    NewSensor->addAction(new QAction("PH", NewSensor));
+    addAction = new QAction("Aggiungi", NewSensor);
+    deleteAction = new QAction("Elimina", NewSensor);
+    selectAction = new QAction("Seleziona", NewSensor);
+    NewSensor->addAction(addAction);
+    NewSensor->addAction(deleteAction);
+    NewSensor->addAction(selectAction);
 
     mainLayout->addWidget(menuBar);
 
@@ -82,16 +113,59 @@ void SensorViewer::addMenus(QVBoxLayout* mainLayout)
     menuBar->setCornerWidget(searchBar);
 }
 
+void SensorViewer::showSensorLists(std::vector<Sensor*> sensors)
+{
+    clearLayout(temperatureLayout);
+    clearLayout(turbidityLayout);
+    clearLayout(phLayout);
+
+    QLabel* temperatureLabel = new QLabel("Temperature Sensors", this);
+    temperatureLayout->addWidget(temperatureLabel);
+    temperatureLabel->setMaximumHeight(20);
+    temperatureLabel->setStyleSheet("background-color: magenta;");
+
+    QLabel* turbidityLabel = new QLabel("Turbidity Sensors", this);
+    turbidityLayout->addWidget(turbidityLabel);
+    turbidityLabel->setMaximumHeight(20);
+    turbidityLabel->setStyleSheet("background-color: lightgreen;");
+
+    QLabel* phLabel = new QLabel("pH Sensors", this);
+    phLayout->addWidget(phLabel);
+    phLabel->setMaximumHeight(20);
+    phLabel->setStyleSheet("background-color: orange;");
+
+
+    for(auto s : sensors)
+    {
+        TempSensor* tp = dynamic_cast<TempSensor*>(s);
+        TurbSensor* tb = dynamic_cast<TurbSensor*>(s);
+        PHSensor* ph = dynamic_cast<PHSensor*>(s);
+
+        QLabel* label = new QLabel(QString::fromStdString(s->getName()), this);
+        label->setMaximumHeight(20);  // Imposta l'altezza massima per ciascuna QLabel
+        if (tp) {
+            temperatureLayout->addWidget(label);
+        }
+        else if (tb) {
+            turbidityLayout->addWidget(label);
+        }
+        else if (ph) {
+            phLayout->addWidget(label);
+        }
+    }
+
+    temperatureLayout->update();
+    turbidityLayout->update();
+    phLayout->update();
+}
+
 void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
 {
-    QLabel* temperatureLabel = new QLabel("Temperature Sensors", this);
-    QVBoxLayout* temperatureLayout = new QVBoxLayout;
-    temperatureLayout->addWidget(temperatureLabel);
+    temperatureLayout = new QVBoxLayout;
 
-    // Aggiungi i sensori di temperatura (puoi aggiungere dinamicamente)
-    for (int i = 1; i <= 10; i++) { // Esempio con 10 sensori
-        temperatureLayout->addWidget(new QLabel("Temperature Sensor " + QString::number(i), this));
-    }
+    QLabel* temperatureLabel = new QLabel("Temperature Sensors", this);
+    temperatureLayout->addWidget(temperatureLabel);
+    temperatureLabel->setMaximumHeight(20);
 
     // Scroll area per i sensori di temperatura
     QScrollArea* temperatureScrollArea = new QScrollArea(this);
@@ -102,14 +176,12 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
     sensorLayout->addWidget(temperatureScrollArea);
 
     // Sezione per i sensori di torbidità
-    QLabel* turbidityLabel = new QLabel("Turbidity Sensors", this);
-    QVBoxLayout* turbidityLayout = new QVBoxLayout;
-    turbidityLayout->addWidget(turbidityLabel);
+    turbidityLayout = new QVBoxLayout;
 
-    // Aggiungi i sensori di torbidità
-    for (int i = 1; i <= 8; i++) { // Esempio con 8 sensori
-        turbidityLayout->addWidget(new QLabel("Turbidity Sensor " + QString::number(i), this));
-    }
+    QLabel* turbidityLabel = new QLabel("Turbidity Sensors", this);
+    turbidityLayout->addWidget(turbidityLabel);
+    turbidityLabel->setMaximumHeight(20);
+
 
     // Scroll area per i sensori di torbidità
     QScrollArea* turbidityScrollArea = new QScrollArea(this);
@@ -120,14 +192,11 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
     sensorLayout->addWidget(turbidityScrollArea);
 
     // Sezione per i sensori di pH
-    QLabel* phLabel = new QLabel("pH Sensors", this);
-    QVBoxLayout* phLayout = new QVBoxLayout;
-    phLayout->addWidget(phLabel);
+    phLayout = new QVBoxLayout;
 
-    // Aggiungi i sensori di pH
-    for (int i = 1; i <= 5; i++) { // Esempio con 5 sensori
-        phLayout->addWidget(new QLabel("pH Sensor " + QString::number(i), this));
-    }
+    QLabel* phLabel = new QLabel("pH Sensors", this);
+    phLayout->addWidget(phLabel);
+    phLabel->setMaximumHeight(20);
 
     // Scroll area per i sensori di pH
     QScrollArea* phScrollArea = new QScrollArea(this);
@@ -140,27 +209,43 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
 
 void SensorViewer::addData(QHBoxLayout* dataLayout)
 {
+    // Crea i layout per i dati statici e modificabili
+    staticBox = new QVBoxLayout;
+    editableBox = new QVBoxLayout;
+
     QLabel* staticDataLabel = new QLabel("Dati Statici", this);
     QLabel* editableDataLabel = new QLabel("Dati Modificabili", this);
-    dataLayout->addWidget(staticDataLabel);
-    dataLayout->addWidget(editableDataLabel);
+
+    staticBox->addWidget(staticDataLabel);
+    editableBox->addWidget(editableDataLabel);
+
+    // Incapsula ciascun layout in un QFrame
+    QFrame* staticFrame = new QFrame(this);
+    staticFrame->setLayout(staticBox);
+    staticFrame->setFrameStyle(QFrame::Box | QFrame::Plain);
+    staticFrame->setStyleSheet("border: 1px solid black;");
+
+    QFrame* editableFrame = new QFrame(this);
+    editableFrame->setLayout(editableBox);
+    editableFrame->setFrameStyle(QFrame::Box | QFrame::Plain);
+    editableFrame->setStyleSheet("border: 1px solid black;");
+
+    // Aggiungi i QFrame al layout principale
+    dataLayout->addWidget(staticFrame);
+    dataLayout->addWidget(editableFrame);
 }
 
 void SensorViewer::addButtons(QVBoxLayout* buttonLayout)
 {
-    saveButton = new QPushButton("Salva", this);
-    QPushButton* modifyButton = new QPushButton("Modifica", this);
-    QPushButton* deleteButton = new QPushButton("Elimina", this);
-    QPushButton* runSimulationButton = new QPushButton("Lancia Simulazione", this);
-
-    saveButton->setObjectName("saveButton");
-    modifyButton->setObjectName("modifyButton");
-    deleteButton->setObjectName("deleteButton");
+    addValueButton = new QPushButton("Aggiungi un valore", this);
+    removeLastValueButton = new QPushButton("Rimuovi l'ultimo valore", this);
+    runSimulationButton = new QPushButton("Lancia Simulazione", this);
+    addValueButton->setObjectName("addValueButton");
+    removeLastValueButton->setObjectName("removeLastValueButton");
     runSimulationButton->setObjectName("runSimulationButton");
 
-    buttonLayout->addWidget(saveButton);
-    buttonLayout->addWidget(modifyButton);
-    buttonLayout->addWidget(deleteButton);
+    buttonLayout->addWidget(addValueButton);
+    buttonLayout->addWidget(removeLastValueButton);
     buttonLayout->addWidget(runSimulationButton);
 }
 
@@ -205,11 +290,10 @@ SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     // Aggiungi i dati e i pulsanti
     addData(dataAndButtonsLayout);
     addButtons(buttonLayout);
+    dataAndButtonsLayout->addLayout(buttonLayout);
 
-    dataAndButtonsLayout->addLayout(buttonLayout); // Aggiungi i pulsanti a destra dei dati
 
     QFrame* graphFrame = addGraph();
-
     dataAndGraphLayout->addLayout(dataAndButtonsLayout, 1);
     dataAndGraphLayout->addWidget(graphFrame, 1);
 
@@ -239,63 +323,24 @@ QString SensorViewer::showAddDialog(){
     return fileName;
 }
 
+
+
 void SensorViewer::setController(Controller* c) {
     controller = c;
 
-    connect(saveButton, SIGNAL(clicked(bool)), controller, SLOT(save()));
+    connect(addValueButton, SIGNAL(clicked(bool)), controller, SLOT(pushValue()));
+    connect(removeLastValueButton, SIGNAL(clicked(bool)), controller, SLOT(popValue()));
+    connect(runSimulationButton, SIGNAL(clicked(bool)), controller, SLOT(Simulation()));
 
-    /*
-    connect(deleteButton, SIGNAL(clicked(bool)), controller, SLOT(remove()));
-    connect(modifyButton, SIGNAL(clicked(bool)), controller, SLOT(modify()));
+    // menù/gestione file
+    connect(saveAction, SIGNAL(triggered()), controller, SLOT(save()));
+    connect(openAction, SIGNAL(triggered()), controller, SLOT(open()));
+    connect(closeAction, SIGNAL(triggered()), controller, SLOT(close()));
+    // menù/gestione sensori
+    connect(addAction, SIGNAL(triggered(bool)), controller, SLOT(add()));
+    connect(deleteAction, SIGNAL(triggered(bool)), controller, SLOT(remove()));
+    connect(selectAction, SIGNAL(triggered(bool)), controller, SLOT(selectSensor()));
 
-    connect(runSimulationButton, SIGNAL(clicked(bool)), controller, SLOT(Simulation()));*/
-    /*
-    // Connessione azioni del menu a slot del Controller
-    auto actions = findChildren<QAction*>();
-    for (auto* action : actions) {
-        if (action->text() == "Salva") {
-            connect(action, &QAction::triggered, controller, &Controller::save);
-        } else if (action->text() == "Apri") {
-            connect(action, &QAction::triggered, controller, &Controller::open);
-        } else if (action->text() == "Chiudi") {
-            connect(action, &QAction::triggered, controller, &Controller::close);
-        } else if (action->text() == "Temperatura") {
-            connect(action, &QAction::triggered, [this]() {
-                QString name = showAddDialog();
-                controller->addSensor("Temperatura", 1, name, 0.0f);  // Esempio
-            });
-        } else if (action->text() == "Torbidità") {
-            connect(action, &QAction::triggered, [this]() {
-                QString name = showAddDialog();
-                controller->addSensor("Torbidità", 1, name, 0.0f);  // Esempio
-            });
-        } else if (action->text() == "pH") {
-            connect(action, &QAction::triggered, [this]() {
-                QString name = showAddDialog();
-                controller->addSensor("pH", 1, name, 0.0f);  // Esempio
-            });
-        }
-    }
-    */
-
-    // Connessione azioni dei pulsanti
-    /*
-    connect(findChild<QPushButton*>("Salva"), &QPushButton::clicked, controller, &Controller::save);
-    connect(findChild<QPushButton*>("Modifica"), &QPushButton::clicked, [this]() {
-        unsigned int id = showSelectDialog();
-        QString name = "Nuovo Nome";  // Modifica il nome del sensore
-        float value = 0.0f;           // Nuovo valore del sensore
-        controller->modifySensor(id, name, value);
-    });
-    connect(findChild<QPushButton*>("Elimina"), &QPushButton::clicked, [this]() {
-        unsigned int id = showRemoveDialog();
-        controller->removeSensor(id);
-    });
-    connect(findChild<QPushButton*>("Lancia Simulazione"), &QPushButton::clicked, [this]() {
-        unsigned int id = showSelectDialog();
-        controller->runSimulation(id);
-    });
-    */
 }
 
 
@@ -318,6 +363,23 @@ unsigned int SensorViewer::showSelectDialog() {
                                                  tr("Inserisci l'ID del sensore:"), 1, 0, 100, 1, &ok);
     if (ok) {
         return sensorId;
+    } else {
+        throw std::runtime_error("Selezione annullata");
+    }
+}
+
+
+float SensorViewer::showValueDialog(){
+    bool ok;
+    float value = static_cast<float>(QInputDialog::getDouble(this, tr("Aggiungi Valore"),
+                                                             tr("Inserisci il nuovo valore del sensore:"),
+                                                             0.0,   // valore predefinito
+                                                             -10000.0, // valore minimo
+                                                             10000.0,  // valore massimo
+                                                             2, // numero di decimali
+                                                             &ok));
+    if (ok) {
+        return value;
     } else {
         throw std::runtime_error("Selezione annullata");
     }

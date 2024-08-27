@@ -3,10 +3,10 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QCoreApplication>
 #include "SensorViewer.h"
 #include "SimulationManager.h"
 #include "SensorRepository.h"
-
 
 class Controller : public QObject
 {
@@ -14,7 +14,7 @@ class Controller : public QObject
 private:
     bool autoMode;
     QTimer* timer;
-
+    Sensor* selectedSensor;
     SensorViewer* view;
     SensorRepository* Repo;
     SimulationManager* Manager;
@@ -24,20 +24,18 @@ public:
     void setRepo(SensorRepository* r);
     void setManager(SimulationManager* m);
     void setView(SensorViewer* v);
-    void addSensor(const QString& sensorType, unsigned int id, const QString& name, float value);
+    //void addSensor(const QString& sensorType, unsigned int id, const QString& name, float value);
 public slots:
     void save();
     void open();
     void close();
-    void show() const;
-    void add() const;
+    void add();
     void remove() const;
-    void Simulation(unsigned int);
-    void selectSensor() const;
-    void search() const;
-    void onSaveRequested();
-    void onModifyRequested();
-    void onDeleteRequested();
+    void Simulation();
+    void selectSensor();
+    void pushValue();
+    void popValue();
+    //void search() const;
     void onSimulationRequested();
     //void sensorAdded(Sensor* sensor);
 };

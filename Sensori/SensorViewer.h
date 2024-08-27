@@ -23,12 +23,30 @@ class Controller;
 class SensorViewer : public QWidget {
     Q_OBJECT
 private:
-    QFrame* info;
     Controller* controller;
-    QPushButton* saveButton;
-    QPushButton* modifyButton;
-    QPushButton* deleteButton;
+
+    // bottoni
+    QPushButton* addValueButton;
+    QPushButton* removeLastValueButton;
     QPushButton* runSimulationButton;
+
+    // menù
+    QAction* saveAction;
+    QAction* openAction;
+    QAction* closeAction;
+    QAction* addAction;
+    QAction* deleteAction;
+    QAction* selectAction;
+
+
+    // box statico ed editabile
+    QVBoxLayout* staticBox;
+    QVBoxLayout* editableBox;
+
+    // liste sensori
+    QVBoxLayout* temperatureLayout;
+    QVBoxLayout* turbidityLayout;
+    QVBoxLayout* phLayout;
 
     void addMenus(QVBoxLayout* mainLayout);
     void addSensors(QVBoxLayout* sensorLayout);
@@ -45,6 +63,8 @@ public:
     unsigned int showRemoveDialog();
     unsigned int showSelectDialog();
     unsigned int showSearchDialog();
+    float showValueDialog();
+    void showSensorLists(std::vector<Sensor*>);
     //addDialog
     //removeDialog
 };
