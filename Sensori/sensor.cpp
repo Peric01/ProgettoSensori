@@ -1,6 +1,7 @@
 #include "sensor.h"
 #include <random>
 #include <algorithm>
+#include <fstream>
 
 Sensor::Sensor(const std::string& n) {
     Name = n;
@@ -17,11 +18,21 @@ void Sensor::addValue(float value) {
 }
 
 void Sensor::updateMaxValue() {
-    MaxValue = *std::max_element(values.begin(), values.end());
+    float val = 0;
+    if(!values.empty())
+    {
+        val = *std::max_element(values.begin(), values.end());
+    }
+    MaxValue = val;
 }
 
 void Sensor::updateMinValue() {
-    MinValue = *std::min_element(values.begin(), values.end());
+    float val = 0;
+    if(!values.empty())
+    {
+        val = *std::min_element(values.begin(), values.end());
+    }
+    MinValue = val;
 }
 
 u_int Sensor::getID() const{
@@ -45,9 +56,13 @@ void Sensor::clearValues(){
     values.clear();
 }
 
+bool Sensor::isEmpty(){
+    return values.empty();
+}
+
 float Sensor::getCurrentValue() const{
     if (values.empty()) {
-        throw std::exception();
+        throw std::runtime_error("Il sensore non ha valori");
     }
     return values.back();
 }
@@ -57,7 +72,7 @@ void Sensor::removeLastValue() {
         values.pop_back();
     }
     else
-        throw std::exception();
+        throw std::runtime_error("Non ci sono valori da rimuovere");
 }
 
 void Sensor::removeValue(float value){

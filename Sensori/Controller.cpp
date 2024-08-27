@@ -5,7 +5,8 @@
 
 Controller::Controller(QObject *parent)
     : QObject(parent), autoMode(false), timer(new QTimer) {
-    connect(timer,SIGNAL(timeout()),this,SLOT(show()));
+    selectedSensor = nullptr;
+    //connect(timer,SIGNAL(timeout()),this,SLOT(show()));
 }
 
 void Controller::setRepo(SensorRepository* r) {Repo = r;}
@@ -97,8 +98,12 @@ void Controller::remove() const {
     {
         unsigned int sensorId = view->showRemoveDialog();  // Supponendo che la vista mostri un dialogo per scegliere il sensore da rimuovere
         Repo->removeSensor(sensorId);
+        if(repo)
         Sensor* s = Repo->getSensor();
         view->showSensor(s);  // Aggiorna la visualizzazione dei sensori
+
+
+
         view->showSensorLists(Repo->getAllSensors());
     }
     catch (std::runtime_error exc)
@@ -127,7 +132,7 @@ void Controller::Simulation() {
         // Se necessario, aggiorna la vista o esegui altre operazioni
         // ...
     }
-    catch (std::runtime_error exc)
+    catch (std::runtime_error& exc)
     {
         view->showWarning(exc.what());
     }
@@ -150,9 +155,10 @@ void Controller::selectSensor() {
 
 void Controller::popValue(){
     try{
-        if(Repo->getEmpty()){/*crasha da aggiustare*/
+        if(!selectedSensor){
+            view->showWarning("Seleziona o crea un sensore");
         }
-        else{
+        else {
             selectedSensor->removeLastValue();
             selectedSensor->updateMaxValue();
             selectedSensor->updateMinValue();
@@ -167,7 +173,7 @@ void Controller::popValue(){
 void Controller::pushValue(){
     try{
         if(!selectedSensor){
-            return;
+            view->showWarning("Seleziona o crea un sensore");
         }
         else{
             float valuetoAdd = view->showValueDialog();

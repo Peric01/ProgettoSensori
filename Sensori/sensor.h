@@ -31,5 +31,6 @@ public:
     std::string toString() const;
     Sensor* get();
     void setID(unsigned int id);
+    bool isEmpty();
 };
 #endif // SENSOR_H

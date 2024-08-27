@@ -27,11 +27,22 @@ void SensorViewer::showSensor(Sensor* s) {
     clearLayout(editableBox);
 
     // Creiamo delle QLabel per mostrare le informazioni del sensore
+
+    QString min = "N/a";
+    QString max = "N/a";
+    QString cur = "N/a";
+    if(!s->isEmpty())
+    {
+        min = QString::number(s->getMin());
+        max = QString::number(s->getMax());
+        cur = QString::number(s->getCurrentValue());
+    }
+
     QLabel* nameLabel = new QLabel("Nome: " + QString::fromStdString(s->getName()), this);
     QLabel* idLabel = new QLabel("ID: " + QString::number(s->getID()), this);
-    QLabel* minValueLabel = new QLabel("Valore Minimo: " + QString::number(s->getMin()), this);
-    QLabel* maxValueLabel = new QLabel("Valore Massimo: " + QString::number(s->getMax()), this);
-    QLabel* currentValueLabel = new QLabel("Valore Corrente: " + QString::number(s->getCurrentValue()), this);
+    QLabel* minValueLabel = new QLabel("Valore Minimo: " + min, this);
+    QLabel* maxValueLabel = new QLabel("Valore Massimo: " + max, this);
+    QLabel* currentValueLabel = new QLabel("Valore Corrente: " + cur, this);
 
     // Aggiungiamo le QLabel al layout principale
     staticBox->addWidget(nameLabel);
@@ -162,6 +173,7 @@ void SensorViewer::showSensorLists(std::vector<Sensor*> sensors)
 void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
 {
     temperatureLayout = new QVBoxLayout;
+    temperatureLayout->setAlignment(Qt::AlignTop);
 
     QLabel* temperatureLabel = new QLabel("Temperature Sensors", this);
     temperatureLayout->addWidget(temperatureLabel);
@@ -177,6 +189,7 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
 
     // Sezione per i sensori di torbidità
     turbidityLayout = new QVBoxLayout;
+    turbidityLayout->setAlignment(Qt::AlignTop);
 
     QLabel* turbidityLabel = new QLabel("Turbidity Sensors", this);
     turbidityLayout->addWidget(turbidityLabel);
@@ -193,6 +206,7 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
 
     // Sezione per i sensori di pH
     phLayout = new QVBoxLayout;
+    phLayout->setAlignment(Qt::AlignTop);
 
     QLabel* phLabel = new QLabel("pH Sensors", this);
     phLayout->addWidget(phLabel);
@@ -207,17 +221,24 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
     sensorLayout->addWidget(phScrollArea);
 }
 
+// void clearData
+
 void SensorViewer::addData(QHBoxLayout* dataLayout)
 {
     // Crea i layout per i dati statici e modificabili
     staticBox = new QVBoxLayout;
     editableBox = new QVBoxLayout;
 
+    //clearData()
+
     QLabel* staticDataLabel = new QLabel("Dati Statici", this);
     QLabel* editableDataLabel = new QLabel("Dati Modificabili", this);
 
     staticBox->addWidget(staticDataLabel);
     editableBox->addWidget(editableDataLabel);
+
+
+
 
     // Incapsula ciascun layout in un QFrame
     QFrame* staticFrame = new QFrame(this);

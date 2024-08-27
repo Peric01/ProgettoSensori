@@ -22,7 +22,7 @@ void SensorRepository::removeSensor(unsigned int sensorId) {
         if ((*it)->getID() == sensorId) {
             delete *it;
             sensors.erase(it);
-            emit sensorRemoved(sensorId);
+            //emit sensorRemoved(sensorId);
             break;
         }
     }
