@@ -70,22 +70,6 @@ void SensorViewer::showSensor(Sensor* s) {
     QLabel* typeLabel = new QLabel(type, this);
     staticBox->addWidget(typeLabel);
 
-
-    /*
-    if (TempSensor* tp = dynamic_cast<TempSensor*>(s)) {
-        QLabel* unitLabel = new QLabel(QString::number(tp->getCurrentValue()) + " °C", this);
-        staticBox->addWidget(unitLabel);
-    }
-    else if (TurbSensor* tb = dynamic_cast<TurbSensor*>(s)) {
-        QLabel* turbidityLabel = new QLabel("Torbidità: " + QString::number(tb->getCurrentValue()), this);
-        staticBox->addWidget(turbidityLabel);
-    }
-    else if (PHSensor* ph = dynamic_cast<PHSensor*>(s)) {
-        QLabel* phLabel = new QLabel("pH: " + QString::number(ph->getCurrentValue()), this);
-        staticBox->addWidget(phLabel);
-    }
-    */
-
     // Aggiorniamo la visualizzazione
     staticBox->update();
 }
@@ -221,7 +205,32 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
     sensorLayout->addWidget(phScrollArea);
 }
 
-// void clearData
+void SensorViewer::clearData() {
+    // Pulisce i layout staticBox e editableBox
+    if (staticBox) {
+        clearLayout(staticBox);
+
+        // Aggiungi più QLabel per Nome, ID e Tipo
+        QLabel* nameLabel = new QLabel("Nome: ", this);
+        QLabel* idLabel = new QLabel("ID: ", this);
+        QLabel* typeLabel = new QLabel("Tipo: ", this);
+
+        staticBox->addWidget(nameLabel);
+        staticBox->addWidget(idLabel);
+        staticBox->addWidget(typeLabel);
+    }
+    if (editableBox) {
+        clearLayout(editableBox);
+        QLabel* minLabel = new QLabel("Valore Minimo: ", this);
+        QLabel* maxLabel = new QLabel("Valore Massimo: ", this);
+        QLabel* curLabel = new QLabel("Valore Corrente: ", this);
+
+        editableBox->addWidget(minLabel);
+        editableBox->addWidget(maxLabel);
+        editableBox->addWidget(curLabel);
+    }
+}
+
 
 void SensorViewer::addData(QHBoxLayout* dataLayout)
 {
@@ -229,16 +238,8 @@ void SensorViewer::addData(QHBoxLayout* dataLayout)
     staticBox = new QVBoxLayout;
     editableBox = new QVBoxLayout;
 
-    //clearData()
-
-    QLabel* staticDataLabel = new QLabel("Dati Statici", this);
-    QLabel* editableDataLabel = new QLabel("Dati Modificabili", this);
-
-    staticBox->addWidget(staticDataLabel);
-    editableBox->addWidget(editableDataLabel);
-
-
-
+    // Pulisce i layout dai dati precedenti
+    clearData();
 
     // Incapsula ciascun layout in un QFrame
     QFrame* staticFrame = new QFrame(this);

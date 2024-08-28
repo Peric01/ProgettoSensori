@@ -52,6 +52,7 @@ private:
     void addSensors(QVBoxLayout* sensorLayout);
     void addData(QHBoxLayout* dataLayout);
     void addButtons(QVBoxLayout* buttonLayout);
+    void initializeLayout(QVBoxLayout*& box, const QString& labelText);
     QFrame* addGraph();
 public:
     explicit SensorViewer(QWidget* parent = nullptr);
@@ -63,7 +64,9 @@ public:
     unsigned int showRemoveDialog();
     unsigned int showSelectDialog();
     unsigned int showSearchDialog();
+    void clearData();
     float showValueDialog();
+
     void showSensorLists(std::vector<Sensor*>);
     //addDialog
     //removeDialog

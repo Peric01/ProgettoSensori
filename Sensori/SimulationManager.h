@@ -1,8 +1,10 @@
 #ifndef SIMULATIONMANAGER_H
 #define SIMULATIONMANAGER_H
 
-#include "Sensor.h"
 #include <QObject>
+#include <QtCore>
+#include <QtCharts>
+//#include "Sensor.h"
 
 class Controller;
 
@@ -17,22 +19,9 @@ public:
     SimulationManager();
     ~SimulationManager();
 
-    void setController(Controller *c);
-
-    // Simulation
-    void runSimulation(Sensor* sensor);
-
-    // Data management
-    void removeValue(Sensor* sensor, size_t index);
-    void clearValues(Sensor* sensor);
-
-signals:
-    void simulationCompleted(unsigned int sensorId);
-    void dataCleared(unsigned int sensorId);
-    void sensorUpdated(Sensor* sensor);
 
 public slots:
-    //void onSimulationRequested(unsigned int sensorId);
+    //void runSimulation(Sensor*);
 };
 
 #endif // SIMULATIONMANAGER_H

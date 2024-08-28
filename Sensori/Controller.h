@@ -24,20 +24,16 @@ public:
     void setRepo(SensorRepository* r);
     void setManager(SimulationManager* m);
     void setView(SensorViewer* v);
-    //void addSensor(const QString& sensorType, unsigned int id, const QString& name, float value);
 public slots:
     void save();
     void open();
     void close();
     void add();
-    void remove() const;
+    void remove();
     void Simulation();
     void selectSensor();
     void pushValue();
     void popValue();
-    //void search() const;
-    void onSimulationRequested();
-    //void sensorAdded(Sensor* sensor);
 };
 
 #endif // CONTROLLER_H

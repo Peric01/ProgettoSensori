@@ -2,6 +2,8 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <stdexcept>
+
 
 Controller::Controller(QObject *parent)
     : QObject(parent), autoMode(false), timer(new QTimer) {
@@ -93,22 +95,23 @@ void Controller::add(){
 }
 
 
-void Controller::remove() const {
+void Controller::remove(){
     try
     {
-        unsigned int sensorId = view->showRemoveDialog();  // Supponendo che la vista mostri un dialogo per scegliere il sensore da rimuovere
-        Repo->removeSensor(sensorId);
-        if(repo)
-        Sensor* s = Repo->getSensor();
-        view->showSensor(s);  // Aggiorna la visualizzazione dei sensori
-
-
-
-        view->showSensorLists(Repo->getAllSensors());
+        unsigned int sensorID;
+        if(!Repo->getEmpty()){
+            sensorID = view->showRemoveDialog();
+            Repo->removeSensor(sensorID);
+            view->showSensorLists(Repo->getAllSensors());
+            view->clearData();
+            selectedSensor = nullptr;
+        }
+        else
+            throw std::runtime_error("");
     }
-    catch (std::runtime_error exc)
+    catch (std::runtime_error& exc)
     {
-        view->showWarning(exc.what());
+        view->showWarning("Nessun sensore presente");
     }
 }
 
@@ -116,10 +119,10 @@ void Controller::Simulation() {
 
     try
     {
-        unsigned int sensorId = view->showSelectDialog();  // Supponendo che la vista mostri un dialogo per scegliere il sensore da simulare
+        unsigned int sensorID = view->showSelectDialog();  // Supponendo che la vista mostri un dialogo per scegliere il sensore da simulare
 
         // Recupera il sensore dal repository
-        Sensor* sensor = Repo->searchSensor(sensorId);
+        Sensor* sensor = Repo->searchSensor(sensorID);
 
         if (!sensor) {
             QMessageBox::warning(nullptr, "Errore", "Sensore non trovato.");
@@ -127,10 +130,7 @@ void Controller::Simulation() {
         }
 
         // Avvia la simulazione usando il SimulationManager
-        Manager->runSimulation(sensor);
-
-        // Se necessario, aggiorna la vista o esegui altre operazioni
-        // ...
+        //Manager->runSimulation(sensor);
     }
     catch (std::runtime_error& exc)
     {
@@ -140,16 +140,15 @@ void Controller::Simulation() {
 
 void Controller::selectSensor() {
     try {
-        unsigned int sensorId = view->showSelectDialog();  // Dialogo per selezionare il sensore
-        Sensor* sensor = Repo->searchSensor(sensorId);
-        if (sensor) {
-            selectedSensor = sensor;
-            view->showSensor(sensor);
+        unsigned int sensorID = view->showSelectDialog();  // Dialogo per selezionare il sensore
+        selectedSensor = Repo->searchSensor(sensorID);
+        if (selectedSensor) {
+            view->showSensor(selectedSensor);
         } else {
             view->showWarning("Sensor not found.");
         }
     } catch (std::runtime_error& exc) {
-        view->showWarning(exc.what());
+        view->showWarning("Nessun sensore selezionato");
     }
 }
 
@@ -189,37 +188,12 @@ void Controller::pushValue(){
     }
 }
 
-
-/*void Controller::search() const {
-    try {
-        unsigned int sensorId = view->showSearchDialog();  // Dialogo per cercare il sensore
-        Sensor* sensor = Repo->searchSensor(sensorId);
-        if (sensor) {
-            view->showSensor(sensor);
-        } else {
-            view->showWarning("Sensor not found.");
-        }
-    } catch (std::runtime_error& exc) {
-        view->showWarning(exc.what());
-    }
-}*/
-
-
-void Controller::onSimulationRequested() {
-    // Implementa la logica per avviare una simulazione
-    // Potresti chiedere all'utente di selezionare un sensore e poi eseguire la simulazione
-    unsigned int sensorId = 1; // Esempio: recupera un ID sensore in qualche modo
-    if (Manager) {
-        Manager->runSimulation(Repo->searchSensor(sensorId));
-    }
-}
-
 void Controller::open() {
     try
     {
 
     }
-    catch (std::runtime_error exc)
+    catch (std::runtime_error& exc)
     {
         view->showWarning(exc.what());
     }
@@ -233,7 +207,7 @@ void Controller::save() {
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     dialog.setDefaultSuffix("json");
     dialog.exec();
-    } catch(std::runtime_error exc)
+    } catch(std::runtime_error& exc)
     {
         view->showWarning(exc.what());
     }
