@@ -145,7 +145,7 @@ void Controller::selectSensor() {
         if (selectedSensor) {
             view->showSensor(selectedSensor);
         } else {
-            view->showWarning("Sensor not found.");
+            view->showWarning("Sensore inesistente");
         }
     } catch (std::runtime_error& exc) {
         view->showWarning("Nessun sensore selezionato");

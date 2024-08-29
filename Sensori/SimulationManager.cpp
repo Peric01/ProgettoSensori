@@ -5,7 +5,7 @@ SimulationManager::SimulationManager() {}
 SimulationManager::~SimulationManager() {}
 
 /*
-    void SimulationManager::onSimulationRequested(unsigned int sensorId) {
-    // Implementazione in coordinamento con SensorRepository per ottenere il sensore corretto
+    void SimulationManager::onSimulationRequested(Sensor* s) {
+
 }
 */

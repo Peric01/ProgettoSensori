@@ -12,6 +12,7 @@ CONFIG += c++17
 
 SOURCES += \
     Controller.cpp \
+    FileConverter.cpp \
     SensorRepository.cpp \
     SensorViewer.cpp \
     SimulationManager.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
 
 HEADERS += \
     Controller.h \
+    FileConverter.h \
     SensorRepository.h \
     SensorViewer.h \
     SimulationManager.h \

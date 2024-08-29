@@ -5,6 +5,7 @@
 #include <QtCore>
 #include <QtCharts>
 //#include "Sensor.h"
+//#include "SensorRepository.h"
 
 class Controller;
 
@@ -21,7 +22,7 @@ public:
 
 
 public slots:
-    //void runSimulation(Sensor*);
+    //void runSimulation(Sensor* );
 };
 
 #endif // SIMULATIONMANAGER_H

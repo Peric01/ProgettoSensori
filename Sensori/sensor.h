@@ -19,7 +19,7 @@ public:
     std::string getName() const;
     float getMin() const;
     float getMax() const;
-    virtual void Simulation() const = 0;
+    virtual void Simulation() const;
     void addValue(float value);
     void updateMaxValue();
     void updateMinValue();
@@ -28,7 +28,6 @@ public:
     void removeValue(float);
     void removeLastValue();
     std::string toString() const;
-    Sensor* get();
     void setID(unsigned int id);
     bool isEmpty();
 };
