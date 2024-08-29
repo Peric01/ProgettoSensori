@@ -1,4 +1,4 @@
-#include "turbsensor.h"
+#include "TurbSensor.h"
 #include <random>
 #include <iostream>
 #include <algorithm>

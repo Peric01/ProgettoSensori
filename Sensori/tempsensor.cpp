@@ -1,4 +1,4 @@
-#include "tempsensor.h"
+#include "TempSensor.h"
 #include <random>
 #include <iostream>
 #include <algorithm>

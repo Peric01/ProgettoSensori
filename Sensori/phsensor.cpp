@@ -1,4 +1,4 @@
-#include "phsensor.h"
+#include "PHSensor.h"
 #include <random>
 #include <algorithm>
 #include <iostream>

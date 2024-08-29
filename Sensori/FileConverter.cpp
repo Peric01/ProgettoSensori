@@ -1,7 +1,7 @@
 #include "FileConverter.h"
-#include "tempsensor.h"
-#include "phsensor.h"
-#include "turbsensor.h"
+#include "TempSensor.h"
+#include "PHSensor.h"
+#include "TurbSensor.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QFile>

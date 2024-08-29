@@ -2,7 +2,7 @@
 #define SENSORREPOSITORY_H
 
 #include "Sensor.h"
-#include "sensorcreator.h"
+#include "SensorCreator.h"
 #include <vector>
 #include <QString>
 #include <QObject>

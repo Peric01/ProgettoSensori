@@ -1,6 +1,6 @@
 #ifndef TURBSENSOR_H
 #define TURBSENSOR_H
-#include "sensor.h"
+#include "Sensor.h"
 #include <QString>
 
 class TurbSensor: public Sensor

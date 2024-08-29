@@ -1,4 +1,4 @@
-#include "sensorviewer.h"
+#include "SensorViewer.h"
 #include "Controller.h"
 #include "SensorRepository.h"
 #include "SimulationManager.h"

@@ -1,6 +1,6 @@
 #ifndef PHSENSOR_H
 #define PHSENSOR_H
-#include "sensor.h"
+#include "Sensor.h"
 #include <QString>
 
 class PHSensor : public Sensor

@@ -1,4 +1,4 @@
-#include "sensorcreator.h"
+#include "SensorCreator.h"
 #include <stdexcept>
 #include <sstream>
 

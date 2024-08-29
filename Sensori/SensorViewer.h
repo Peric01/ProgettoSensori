@@ -16,7 +16,7 @@
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
 #include <QDialog>
-#include <qfiledialog.h>
+#include <QFileDialog>
 #include "Sensor.h"
 class Controller;
 

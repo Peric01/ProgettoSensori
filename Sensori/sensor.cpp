@@ -1,4 +1,4 @@
-#include "sensor.h"
+#include "Sensor.h"
 #include <algorithm>
 #include <stdexcept>
 

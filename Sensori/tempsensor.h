@@ -1,6 +1,6 @@
 #ifndef TEMPSENSOR_H
 #define TEMPSENSOR_H
-#include "sensor.h"
+#include "Sensor.h"
 #include <QString>
 
 class TempSensor: public Sensor

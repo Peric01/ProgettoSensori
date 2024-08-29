@@ -1,8 +1,8 @@
 #ifndef SENSORCREATOR_H
 #define SENSORCREATOR_H
-#include "tempsensor.h"
-#include "turbsensor.h"
-#include "phsensor.h"
+#include "TempSensor.h"
+#include "TurbSensor.h"
+#include "PHSensor.h"
 
 class SensorCreator
 {

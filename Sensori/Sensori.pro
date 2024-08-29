@@ -16,12 +16,12 @@ SOURCES += \
     SensorRepository.cpp \
     SensorViewer.cpp \
     SimulationManager.cpp \
-    main.cpp \
-    phsensor.cpp \
-    sensor.cpp \
-    sensorcreator.cpp \
-    tempsensor.cpp \
-    turbsensor.cpp
+    Main.cpp \
+    PHSensor.cpp \
+    Sensor.cpp \
+    SensorCreator.cpp \
+    TempSensor.cpp \
+    TurbSensor.cpp
 
 HEADERS += \
     Controller.h \
@@ -29,11 +29,11 @@ HEADERS += \
     SensorRepository.h \
     SensorViewer.h \
     SimulationManager.h \
-    phsensor.h \
-    sensor.h \
-    sensorcreator.h \
-    tempsensor.h \
-    turbsensor.h
+    PHSensor.h \
+    Sensor.h \
+    SensorCreator.h \
+    TempSensor.h \
+    TurbSensor.h
 
 FORMS +=
 

@@ -91,10 +91,12 @@ void SensorViewer::addMenus(QVBoxLayout* mainLayout)
 
     mainLayout->addWidget(menuBar);
 
-    // Menu/Barra di ricerca nel Menu
+    /*    // Menu/Barra di ricerca nel Menu
     QLineEdit* searchBar = new QLineEdit(this);
     searchBar->setPlaceholderText("Cerca...");
     menuBar->setCornerWidget(searchBar);
+    //implementabile in futuro per filtrare i sensori
+*/
 }
 
 void SensorViewer::showSensorLists(std::vector<Sensor*> sensors)
