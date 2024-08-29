@@ -31,7 +31,7 @@ Sensor* FileConverter::JsonObjectToSensor(const QJsonObject& obj) {
     Sensor* sensor = nullptr;
 
     // Estrai i dati comuni dal QJsonObject
-    QString qname = obj["n"].toString();
+    QString qname = obj["name"].toString();
     std::string name =  qname.toStdString();
     int id = obj["id"].toInt();
     float value = static_cast<float>(obj["cur"].toDouble());
@@ -47,7 +47,7 @@ Sensor* FileConverter::JsonObjectToSensor(const QJsonObject& obj) {
     }
 
     // Popolare i valori aggiuntivi
-    QJsonArray jsonValues = obj["v"].toArray();
+    QJsonArray jsonValues = obj["vals"].toArray();
     std::vector<float> values;
     for (const auto& value : jsonValues) {
         values.push_back(static_cast<float>(value.toDouble()));

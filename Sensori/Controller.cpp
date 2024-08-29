@@ -219,9 +219,8 @@ void Controller::open() {
             // Imposta i sensori nel repository
             Repo->setAllSensors(sensors);
 
-            // Mostra la lista dei sensori
-            view->showSensorLists(Repo->getAllSensors());
             view->clearData(); // Pulisce i dati precedenti
+            view->showSensorLists(Repo->getAllSensors());
 
             // Mostra un messaggio di successo
             QMessageBox::information(view, "Apri sensori", "Sensori aperti correttamente");
