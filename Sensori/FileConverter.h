@@ -12,8 +12,8 @@ public:
     explicit FileConverter(const FileConverter&) = delete;
 
     static QJsonObject SensorToJsonObject(const Sensor& s);
-    static Sensor JsonObjectToColor(const QJsonObject obj);
-    static void saveJSonObjectToFile(const QString& path, const QJsonObject& obj);
+    static Sensor* JsonObjectToSensor(const QJsonObject& obj);
+    static void saveJsonObjectToFile(const QString& path, const QJsonObject& obj);
     static QJsonObject readJsonObjectFromFile(const QString& path);
 };
 

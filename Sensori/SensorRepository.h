@@ -33,6 +33,7 @@ public:
     Sensor* searchSensor(unsigned int sensorId) const;
     bool getEmpty();
     std::vector<Sensor*> getAllSensors() const;
+    void setAllSensors(std::vector<Sensor*>);
     Sensor* getSensor() const;
     // File operations
     void saveToFile(const QString& filename) const;

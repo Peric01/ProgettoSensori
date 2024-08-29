@@ -1,4 +1,5 @@
 #include "Controller.h"
+#include "FileConverter.h"
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QFileDialog>
@@ -189,29 +190,90 @@ void Controller::pushValue(){
 }
 
 void Controller::open() {
-    try
-    {
+    try {
+        QString path = QFileDialog::getOpenFileName(
+            view,
+            "Apri sensori",
+            "",
+            "JSON file (*.json)"
+            );
 
+        if (path.isEmpty()) {
+            return; // Nessun file selezionato
+        }
+
+        // Legge l'oggetto JSON dal file
+        QJsonObject jsonSensors = FileConverter::readJsonObjectFromFile(path);
+
+        if (jsonSensors.contains("sensors") && jsonSensors["sensors"].isArray()) {
+            QJsonArray sensorArray = jsonSensors["sensors"].toArray();
+            std::vector<Sensor*> sensors;
+
+            // Converte ogni oggetto JSON in un sensore
+            for (const auto& sensorValue : sensorArray) {
+                QJsonObject sensorObj = sensorValue.toObject();
+                Sensor* sensor = FileConverter::JsonObjectToSensor(sensorObj);
+                sensors.push_back(sensor);
+            }
+
+            // Imposta i sensori nel repository
+            Repo->setAllSensors(sensors);
+
+            // Mostra la lista dei sensori
+            view->showSensorLists(Repo->getAllSensors());
+            view->clearData(); // Pulisce i dati precedenti
+
+            // Mostra un messaggio di successo
+            QMessageBox::information(view, "Apri sensori", "Sensori aperti correttamente");
+        } else {
+            throw std::runtime_error("Il file JSON non contiene dati sui sensori.");
+        }
     }
-    catch (std::runtime_error& exc)
-    {
-        view->showWarning(exc.what());
+    catch (const std::runtime_error& exc) {
+        // Mostra un messaggio di errore
+        QMessageBox::warning(view, "Errore", exc.what());
     }
 }
+
+
+#include <QFileDialog>
 
 void Controller::save() {
-    // Implementazione per salvare lo stato
-    //qDebug() << "Save action triggered";
-    try{
-    QFileDialog dialog(view, "Salva i sensori", "", "JSON file (*.json)");
-    dialog.setAcceptMode(QFileDialog::AcceptSave);
-    dialog.setDefaultSuffix("json");
-    dialog.exec();
-    } catch(std::runtime_error& exc)
-    {
-        view->showWarning(exc.what());
+    try {
+        // Mostra la finestra di dialogo per scegliere dove salvare il file
+        QString path = QFileDialog::getSaveFileName(
+            view,
+            "Salva sensori",
+            "",
+            "JSON file (*.json)"
+            );
+
+        if (path.isEmpty()) {
+            // Se l'utente annulla, non fare nulla
+            return;
+        }
+
+        // Crea un QJsonObject rappresentante lo stato dei sensori
+        QJsonObject jsonSensors;
+        QJsonArray sensorArray;
+        for (const auto& sensor : Repo->getAllSensors()) {
+            sensorArray.append(FileConverter::SensorToJsonObject(*sensor));
+        }
+        jsonSensors.insert("sensors", sensorArray);
+
+        // Salva il QJsonObject nel file
+        FileConverter::saveJsonObjectToFile(path, jsonSensors);
+
+        // Mostra un messaggio di successo
+        // Usa direttamente un QMessageBox se 'showInformation' non è disponibile
+        QMessageBox::information(view, "Salva sensori", "Sensori salvati correttamente");
+    }
+    catch (const std::runtime_error& exc) {
+        // Mostra un messaggio di errore
+        QMessageBox::warning(view, "Errore", exc.what());
     }
 }
+
 
 void Controller::close() {
     QCoreApplication::quit();

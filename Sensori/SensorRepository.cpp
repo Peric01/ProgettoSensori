@@ -51,6 +51,10 @@ std::vector<Sensor*> SensorRepository::getAllSensors() const {
     return sensors;
 }
 
+void SensorRepository::setAllSensors(std::vector<Sensor*> list){
+    sensors = list;
+}
+
 void SensorRepository::saveToFile(const QString& filename) const {
     std::ofstream file(filename.toStdString());
     if (file.is_open()) {

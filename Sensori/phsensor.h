@@ -9,5 +9,6 @@ public:
     PHSensor(u_int id, const QString& name, float value);
     ~PHSensor() = default;
     void Simulation() const override;
+    std::string getType() const override;
 };
 #endif // PHSENSOR_H

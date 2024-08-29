@@ -17,18 +17,24 @@ public:
     Sensor(const std::string&);
     u_int getID() const;
     std::string getName() const;
+    void setName(std::string);
     float getMin() const;
+    void setMin(float);
     float getMax() const;
-    virtual void Simulation() const;
+    void setMax(float);
+    virtual void Simulation() const = 0;
     void addValue(float value);
+    void setAllValues(std::vector<float>);
     void updateMaxValue();
     void updateMinValue();
     void clearValues();
     float getCurrentValue() const;
     void removeValue(float);
     void removeLastValue();
+    std::vector<float> getAllValues() const;
     std::string toString() const;
     void setID(unsigned int id);
     bool isEmpty();
+    virtual std::string getType() const = 0;
 };
 #endif // SENSOR_H

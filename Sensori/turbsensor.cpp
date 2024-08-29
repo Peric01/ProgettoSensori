@@ -35,3 +35,7 @@ void TurbSensor::Simulation() const{
     std::cout << "Max Value: " << max_value << std::endl << "Min Value: " << min_value << std::endl;
     std::cout << "Average Value: " << average << std::endl;
 }
+
+std::string TurbSensor::getType() const{
+    return "TurbSensor";
+}

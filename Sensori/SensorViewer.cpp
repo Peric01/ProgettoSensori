@@ -27,16 +27,9 @@ void SensorViewer::showSensor(Sensor* s) {
     clearLayout(editableBox);
 
     // Creiamo delle QLabel per mostrare le informazioni del sensore
-
-    QString min = "N/a";
-    QString max = "N/a";
-    QString cur = "N/a";
-    if(!s->isEmpty())
-    {
-        min = QString::number(s->getMin());
-        max = QString::number(s->getMax());
-        cur = QString::number(s->getCurrentValue());
-    }
+    QString min = s->isEmpty() ? "N/a" : QString::number(s->getMin());
+    QString max = s->isEmpty() ? "N/a" : QString::number(s->getMax());
+    QString cur = s->isEmpty() ? "N/a" : QString::number(s->getCurrentValue());
 
     QLabel* nameLabel = new QLabel("Nome: " + QString::fromStdString(s->getName()), this);
     QLabel* idLabel = new QLabel("ID: " + QString::number(s->getID()), this);
@@ -54,16 +47,11 @@ void SensorViewer::showSensor(Sensor* s) {
 
     // Determiniamo il tipo di sensore e aggiungiamo le informazioni specifiche
     QString type = "Tipo: ";
-    TempSensor* tp = dynamic_cast<TempSensor*>(s);
-    TurbSensor* tb = dynamic_cast<TurbSensor*>(s);
-    PHSensor* ph = dynamic_cast<PHSensor*>(s);
-    if (tp) {
+    if (dynamic_cast<TempSensor*>(s)) {
         type += "Temperatura";
-    }
-    else if (tb) {
+    } else if (dynamic_cast<TurbSensor*>(s)) {
         type += "Torbidità";
-    }
-    else if (ph) {
+    } else if (dynamic_cast<PHSensor*>(s)) {
         type += "pH";
     }
 
@@ -73,6 +61,7 @@ void SensorViewer::showSensor(Sensor* s) {
     // Aggiorniamo la visualizzazione
     staticBox->update();
 }
+
 
 
 void SensorViewer::addMenus(QVBoxLayout* mainLayout)

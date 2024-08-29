@@ -37,13 +37,24 @@ std::string Sensor::getName() const{
     return Name;
 }
 
+void Sensor::setName(std::string s){
+    Name = s;
+}
+
 float Sensor::getMin() const{
     return MinValue;
 }
 
+void Sensor::setMin(float m){
+    MinValue = m;
+}
 
 float Sensor::getMax() const{
     return MaxValue;
+}
+
+void Sensor::setMax(float m){
+    MaxValue = m;
 }
 
 void Sensor::clearValues(){
@@ -92,4 +103,12 @@ std::string Sensor::toString() const {
 
 void Sensor::setID(unsigned int newId) {
     SensorID = newId;
+}
+
+std::vector<float> Sensor::getAllValues() const{
+    return values;
+}
+
+void Sensor::setAllValues(std::vector<float> v){
+    values = v;
 }

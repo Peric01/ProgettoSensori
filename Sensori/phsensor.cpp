@@ -36,3 +36,7 @@ PHSensor::PHSensor(u_int id, const QString& name, float value) : Sensor(name.toS
     updateMinValue(); // Aggiorna il valore minimo
     updateMaxValue(); // Aggiorna il valore massimo
 }
+
+std::string PHSensor::getType() const {
+    return "PHSensor";
+}
