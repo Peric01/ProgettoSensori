@@ -1,8 +1,6 @@
-QT       += core gui
+QT       += core gui charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-QT += charts
 
 CONFIG += c++17
 
@@ -13,9 +11,12 @@ CONFIG += c++17
 SOURCES += \
     Controller.cpp \
     FileConverter.cpp \
+    Graph.cpp \
+    GraphBars.cpp \
+    GraphCandels.cpp \
+    GraphSmoothLine.cpp \
     SensorRepository.cpp \
     SensorViewer.cpp \
-    SimulationManager.cpp \
     Main.cpp \
     PHSensor.cpp \
     Sensor.cpp \
@@ -26,9 +27,12 @@ SOURCES += \
 HEADERS += \
     Controller.h \
     FileConverter.h \
+    Graph.h \
+    GraphBars.h \
+    GraphCandels.h \
+    GraphSmoothLine.h \
     SensorRepository.h \
     SensorViewer.h \
-    SimulationManager.h \
     PHSensor.h \
     Sensor.h \
     SensorCreator.h \

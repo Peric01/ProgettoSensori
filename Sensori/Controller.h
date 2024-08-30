@@ -5,7 +5,6 @@
 #include <QTimer>
 #include <QCoreApplication>
 #include "SensorViewer.h"
-#include "SimulationManager.h"
 #include "SensorRepository.h"
 
 class Controller : public QObject
@@ -17,12 +16,10 @@ private:
     Sensor* selectedSensor;
     SensorViewer* view;
     SensorRepository* Repo;
-    SimulationManager* Manager;
 public:
     explicit Controller(QObject *parent = nullptr);
     ~Controller();
     void setRepo(SensorRepository* r);
-    void setManager(SimulationManager* m);
     void setView(SensorViewer* v);
 public slots:
     void save();

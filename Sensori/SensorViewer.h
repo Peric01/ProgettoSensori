@@ -25,10 +25,14 @@ class SensorViewer : public QWidget {
 private:
     Controller* controller;
 
+    //grafico della simulazione
+    QFrame* ObtainedGraph = nullptr;
+
     // bottoni
     QPushButton* addValueButton;
     QPushButton* removeLastValueButton;
     QPushButton* runSimulationButton;
+    QPushButton* runRandomSimulationButton;
 
     // menù
     QAction* saveAction;
@@ -48,12 +52,14 @@ private:
     QVBoxLayout* turbidityLayout;
     QVBoxLayout* phLayout;
 
+    // layout grafico
+    QVBoxLayout* dataAndGraphLayout;
+
     void addMenus(QVBoxLayout* mainLayout);
     void addSensors(QVBoxLayout* sensorLayout);
     void addData(QHBoxLayout* dataLayout);
     void addButtons(QVBoxLayout* buttonLayout);
     void initializeLayout(QVBoxLayout*& box, const QString& labelText);
-    QFrame* addGraph();
 public:
     explicit SensorViewer(QWidget* parent = nullptr);
     void showWarning(const QString&);
@@ -66,9 +72,8 @@ public:
     unsigned int showSearchDialog();
     void clearData();
     float showValueDialog();
-
+    void showGraph(QChart* chart);
+    QFrame* createGrayFrame();
     void showSensorLists(std::vector<Sensor*>);
-    //addDialog
-    //removeDialog
 };
 #endif // SENSORVIEWER_H

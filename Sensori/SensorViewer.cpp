@@ -6,6 +6,10 @@
 #include <QInputDialog>
 #include <QPalette>
 #include <QColor>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QChart>
+
 
 void SensorViewer::clearLayout(QLayout* layout) const{
     QLayoutItem* item;
@@ -20,6 +24,17 @@ void SensorViewer::clearLayout(QLayout* layout) const{
     }
 }
 
+QFrame* SensorViewer::createGrayFrame() {
+    QFrame* grayFrame = new QFrame(this);
+    grayFrame->setFrameStyle(QFrame::Box);  // Opzionale: imposta lo stile del frame
+    grayFrame->setStyleSheet("background-color: gray;");  // Imposta il colore di sfondo a grigio
+
+    // Configura un layout vuoto per il frame se necessario
+    QVBoxLayout* layout = new QVBoxLayout;
+    grayFrame->setLayout(layout);
+
+    return grayFrame;
+}
 
 void SensorViewer::showSensor(Sensor* s) {
     // Ripuliamo i layout dati dal sensore precedente
@@ -252,29 +267,29 @@ void SensorViewer::addButtons(QVBoxLayout* buttonLayout)
 {
     addValueButton = new QPushButton("Aggiungi un valore", this);
     removeLastValueButton = new QPushButton("Rimuovi l'ultimo valore", this);
-    runSimulationButton = new QPushButton("Lancia Simulazione", this);
-    addValueButton->setObjectName("addValueButton");
-    removeLastValueButton->setObjectName("removeLastValueButton");
-    runSimulationButton->setObjectName("runSimulationButton");
 
+    // Creiamo un layout orizzontale per i due nuovi pulsanti
+    QHBoxLayout* simulationButtonsLayout = new QHBoxLayout;
+
+    // Creiamo i due nuovi pulsanti
+    runSimulationButton = new QPushButton("Simulazione", this);
+    runRandomSimulationButton = new QPushButton("Simulazione Random", this);
+
+    // Aggiungiamo i pulsanti al layout orizzontale
+    simulationButtonsLayout->addWidget(runSimulationButton);
+    simulationButtonsLayout->addWidget(runRandomSimulationButton);
+
+    // Aggiungiamo i pulsanti al layout verticale principale
     buttonLayout->addWidget(addValueButton);
     buttonLayout->addWidget(removeLastValueButton);
-    buttonLayout->addWidget(runSimulationButton);
+
+    // Aggiungiamo il layout contenente i due nuovi pulsanti
+    buttonLayout->addLayout(simulationButtonsLayout);
 }
 
 
-QFrame* SensorViewer::addGraph()
-{
-    QFrame* graphFrame = new QFrame(this);
-    graphFrame->setFrameStyle(QFrame::Box);
-    graphFrame->setStyleSheet("border: 2px solid black;");
-    QVBoxLayout* graphLayout = new QVBoxLayout;
-    QLabel* graphLabel = new QLabel("Simulazione di grafico dei valori del sensore", this);
-    graphFrame->setLayout(graphLayout);
-    graphLayout->addWidget(graphLabel);
 
-    return graphFrame;
-}
+
 
 
 SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
@@ -288,7 +303,7 @@ SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     sensorFrame->setStyleSheet("border: 2px solid black;");
     sensorFrame->setLayout(sensorLayout);
 
-    QVBoxLayout* dataAndGraphLayout = new QVBoxLayout; // Layout verticale per dati e grafico
+    dataAndGraphLayout = new QVBoxLayout; // Layout verticale per dati e grafico
 
     QHBoxLayout* dataAndButtonsLayout = new QHBoxLayout;  // Layout orizzontale per dati e pulsanti
 
@@ -305,8 +320,13 @@ SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     addButtons(buttonLayout);
     dataAndButtonsLayout->addLayout(buttonLayout);
 
-
-    QFrame* graphFrame = addGraph();
+    QFrame* graphFrame = nullptr;
+    if(ObtainedGraph){
+        graphFrame = ObtainedGraph;
+    }
+    else{
+        graphFrame = createGrayFrame();
+    }
     dataAndGraphLayout->addLayout(dataAndButtonsLayout, 1);
     dataAndGraphLayout->addWidget(graphFrame, 1);
 
@@ -316,7 +336,28 @@ SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     mainLayout->addLayout(screenLayout);
     mainLayout->setSpacing(0);
     setLayout(mainLayout);
+
+    setMinimumWidth(800);  // Imposta la larghezza minima per l'intero SensorViewer
+    setMinimumHeight(400);
     resize(QSize(1024, 720));
+}
+
+void SensorViewer::showGraph(QChart* chart) {
+    QFrame* graphFrame = new QFrame(this);
+    graphFrame->setFrameStyle(QFrame::Box);
+    graphFrame->setStyleSheet("border: 2px solid black;");
+
+    // Crea una vista del grafico usando il QChart passato come argomento
+    QChartView *chartView = new QChartView(chart, this);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    // Configura il layout del frame
+    QVBoxLayout* graphLayout = new QVBoxLayout;
+    graphLayout->addWidget(chartView);
+    graphFrame->setLayout(graphLayout);
+
+    ObtainedGraph = graphFrame;
+    dataAndGraphLayout->update();
 }
 
 void SensorViewer::showWarning(const QString& message){

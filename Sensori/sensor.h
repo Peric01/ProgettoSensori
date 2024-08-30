@@ -22,7 +22,7 @@ public:
     void setMin(float);
     float getMax() const;
     void setMax(float);
-    virtual void Simulation() const = 0;
+    virtual std::vector<float> randSimulation() const = 0;
     void addValue(float value);
     void setAllValues(std::vector<float>);
     void updateMaxValue();

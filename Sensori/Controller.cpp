@@ -1,5 +1,6 @@
 #include "Controller.h"
 #include "FileConverter.h"
+#include "GraphBars.h"
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QFileDialog>
@@ -13,7 +14,6 @@ Controller::Controller(QObject *parent)
 }
 
 void Controller::setRepo(SensorRepository* r) {Repo = r;}
-void Controller::setManager(SimulationManager* m) {Manager = m;}
 void Controller::setView(SensorViewer* v) {view = v;}
 
 Controller::~Controller() {delete timer;}
@@ -120,18 +120,26 @@ void Controller::Simulation() {
 
     try
     {
-        unsigned int sensorID = view->showSelectDialog();  // Supponendo che la vista mostri un dialogo per scegliere il sensore da simulare
-
-        // Recupera il sensore dal repository
-        Sensor* sensor = Repo->searchSensor(sensorID);
-
-        if (!sensor) {
-            QMessageBox::warning(nullptr, "Errore", "Sensore non trovato.");
+        if (!selectedSensor) {
+            view->showWarning("Sensore non selezionato");
             return;
         }
-
-        // Avvia la simulazione usando il SimulationManager
-        //Manager->runSimulation(sensor);
+        else{
+            /*            TempSensor* tp = dynamic_cast<TempSensor*>(selectedSensor);
+            PHSensor* ph = dynamic_cast<PHSensor*>(selectedSensor);*/
+            TurbSensor* tb = dynamic_cast<TurbSensor*>(selectedSensor);
+            /*            if(tp){
+                return;
+            }
+            else if(ph){
+                return;
+            }
+            else */if(tb){
+                GraphBars turbgraph;
+                turbgraph.setGraph(tb);
+                view->showGraph(turbgraph.getGraph());
+            }
+        }
     }
     catch (std::runtime_error& exc)
     {
@@ -234,8 +242,6 @@ void Controller::open() {
     }
 }
 
-
-#include <QFileDialog>
 
 void Controller::save() {
     try {
