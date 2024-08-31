@@ -28,6 +28,7 @@ public slots:
     void add();
     void remove();
     void Simulation();
+    void randSimulation();
     void selectSensor();
     void pushValue();
     void popValue();

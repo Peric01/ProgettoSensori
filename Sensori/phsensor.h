@@ -10,5 +10,6 @@ public:
     ~PHSensor() = default;
     std::vector<float> randSimulation() const override;
     std::string getType() const override;
+    bool validValue(float v) const override;
 };
 #endif // PHSENSOR_H

@@ -61,7 +61,7 @@ void Sensor::clearValues(){
     values.clear();
 }
 
-bool Sensor::isEmpty(){
+bool Sensor::isEmpty() const{
     return values.empty();
 }
 
@@ -111,4 +111,12 @@ std::vector<float> Sensor::getAllValues() const{
 
 void Sensor::setAllValues(std::vector<float> v){
     values = v;
+}
+
+float Sensor::getTolMin() const{
+    return tolMin;
+}
+
+float Sensor::getTolMax() const{
+    return tolMax;
 }

@@ -3,6 +3,8 @@
 
 TurbSensor::TurbSensor(u_int id, const QString& name, float value) : Sensor(name.toStdString()) {
     setID(id);
+    tolMin = 0.01;
+    tolMax = 4000;
     addValue(value);  // Aggiunge il valore iniziale al vector values
     updateMinValue(); // Aggiorna il valore minimo
     updateMaxValue(); // Aggiorna il valore massimo
@@ -23,4 +25,11 @@ std::vector<float> TurbSensor::randSimulation() const{
 
 std::string TurbSensor::getType() const{
     return "TurbSensor";
+}
+
+bool TurbSensor::validValue(float v) const{
+    if(v < 0.01 || v > 4000)
+        return false;
+    else
+        return true;
 }

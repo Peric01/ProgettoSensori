@@ -12,6 +12,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QScrollArea>
+#include <QChart>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
@@ -24,9 +25,6 @@ class SensorViewer : public QWidget {
     Q_OBJECT
 private:
     Controller* controller;
-
-    //grafico della simulazione
-    QFrame* ObtainedGraph = nullptr;
 
     // bottoni
     QPushButton* addValueButton;
@@ -54,6 +52,7 @@ private:
 
     // layout grafico
     QVBoxLayout* dataAndGraphLayout;
+    QVBoxLayout* graphLayout;
 
     void addMenus(QVBoxLayout* mainLayout);
     void addSensors(QVBoxLayout* sensorLayout);
@@ -75,5 +74,6 @@ public:
     void showGraph(QChart* chart);
     QFrame* createGrayFrame();
     void showSensorLists(std::vector<Sensor*>);
+    void clearGraph();
 };
 #endif // SENSORVIEWER_H

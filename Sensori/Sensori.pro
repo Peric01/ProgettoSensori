@@ -12,8 +12,8 @@ SOURCES += \
     Controller.cpp \
     FileConverter.cpp \
     Graph.cpp \
+    GraphArea.cpp \
     GraphBars.cpp \
-    GraphCandels.cpp \
     GraphSmoothLine.cpp \
     SensorRepository.cpp \
     SensorViewer.cpp \
@@ -28,8 +28,8 @@ HEADERS += \
     Controller.h \
     FileConverter.h \
     Graph.h \
+    GraphArea.h \
     GraphBars.h \
-    GraphCandels.h \
     GraphSmoothLine.h \
     SensorRepository.h \
     SensorViewer.h \

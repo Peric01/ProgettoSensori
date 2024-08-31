@@ -3,6 +3,8 @@
 
 TempSensor::TempSensor(u_int id, const QString& name,  float value) : Sensor(name.toStdString()) {
     setID(id);
+    tolMin = -50;
+    tolMax = 250;
     addValue(value);  // Aggiunge il valore iniziale al vector values
     updateMinValue(); // Aggiorna il valore minimo
     updateMaxValue(); // Aggiorna il valore massimo
@@ -11,7 +13,7 @@ TempSensor::TempSensor(u_int id, const QString& name,  float value) : Sensor(nam
 std::vector<float> TempSensor::randSimulation() const{
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> dis(0.01, 4000);
+    std::uniform_real_distribution<float> dis(-50, 250);
 
     std::vector<float> randValues;
     for (int i = 0; i < 12; ++i) {
@@ -23,4 +25,12 @@ std::vector<float> TempSensor::randSimulation() const{
 
 std::string TempSensor::getType() const{
     return "TempSensor";
+}
+
+
+bool TempSensor::validValue(float v) const{
+    if(v < -50 || v > 250)
+        return false;
+    else
+        return true;
 }

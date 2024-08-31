@@ -12,8 +12,9 @@ protected:
     std::vector<float> RandVals;
 public:
     Graph();
+    virtual ~Graph() = 0;
     virtual void setGraph(Sensor*) = 0;
-    virtual void setRandGraph(Sensor*) = 0; // deve svuotare l'array creato il grafico
+    virtual void setRandGraph(Sensor*) = 0;
     QChart* getGraph();
     void setRandVals(Sensor*);
     std::vector<float> getRandVals();

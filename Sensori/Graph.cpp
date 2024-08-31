@@ -2,6 +2,10 @@
 
 Graph::Graph() {}
 
+Graph::~Graph(){
+    RandVals.clear();
+}
+
 QChart* Graph::getGraph(){
     return SimGraph;
 }

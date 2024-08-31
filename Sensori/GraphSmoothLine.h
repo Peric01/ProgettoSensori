@@ -6,9 +6,9 @@
 class GraphSmoothLine : public Graph
 {
 public:
-    GraphSmoothLine();/*
+    GraphSmoothLine();
     void setGraph(Sensor*) override;
-    void setRandGraph(Sensor*) override;*/
+    void setRandGraph(Sensor*) override;
 };
 
 #endif // GRAPHSMOOTHLINE_H

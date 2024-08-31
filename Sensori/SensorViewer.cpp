@@ -99,7 +99,7 @@ void SensorViewer::addMenus(QVBoxLayout* mainLayout)
     // Menu/Aggiunta Sensori
     addAction = new QAction("Aggiungi", NewSensor);
     deleteAction = new QAction("Elimina", NewSensor);
-    selectAction = new QAction("Seleziona", NewSensor);
+    selectAction = new QAction("Cerca e seleziona", NewSensor);
     NewSensor->addAction(addAction);
     NewSensor->addAction(deleteAction);
     NewSensor->addAction(selectAction);
@@ -287,11 +287,6 @@ void SensorViewer::addButtons(QVBoxLayout* buttonLayout)
     buttonLayout->addLayout(simulationButtonsLayout);
 }
 
-
-
-
-
-
 SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     QVBoxLayout* mainLayout = new QVBoxLayout;
 
@@ -307,6 +302,8 @@ SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
 
     QHBoxLayout* dataAndButtonsLayout = new QHBoxLayout;  // Layout orizzontale per dati e pulsanti
 
+    graphLayout = new QVBoxLayout;  // Layout per il grafico
+
     QVBoxLayout* buttonLayout = new QVBoxLayout; // Layout verticale per i pulsanti
 
     // Menu
@@ -320,15 +317,9 @@ SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     addButtons(buttonLayout);
     dataAndButtonsLayout->addLayout(buttonLayout);
 
-    QFrame* graphFrame = nullptr;
-    if(ObtainedGraph){
-        graphFrame = ObtainedGraph;
-    }
-    else{
-        graphFrame = createGrayFrame();
-    }
+    graphLayout->addWidget(createGrayFrame());
     dataAndGraphLayout->addLayout(dataAndButtonsLayout, 1);
-    dataAndGraphLayout->addWidget(graphFrame, 1);
+    dataAndGraphLayout->addLayout(graphLayout, 1);
 
     screenLayout->addWidget(sensorFrame, 1);
     screenLayout->addLayout(dataAndGraphLayout, 2);
@@ -343,21 +334,17 @@ SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
 }
 
 void SensorViewer::showGraph(QChart* chart) {
-    QFrame* graphFrame = new QFrame(this);
-    graphFrame->setFrameStyle(QFrame::Box);
-    graphFrame->setStyleSheet("border: 2px solid black;");
-
-    // Crea una vista del grafico usando il QChart passato come argomento
+    clearLayout(graphLayout);
     QChartView *chartView = new QChartView(chart, this);
     chartView->setRenderHint(QPainter::Antialiasing);
 
-    // Configura il layout del frame
-    QVBoxLayout* graphLayout = new QVBoxLayout;
     graphLayout->addWidget(chartView);
-    graphFrame->setLayout(graphLayout);
+    graphLayout->update();
+}
 
-    ObtainedGraph = graphFrame;
-    dataAndGraphLayout->update();
+void SensorViewer::clearGraph(){
+    clearLayout(graphLayout);
+    graphLayout->addWidget(createGrayFrame());
 }
 
 void SensorViewer::showWarning(const QString& message){
@@ -377,15 +364,13 @@ QString SensorViewer::showAddDialog(){
     return fileName;
 }
 
-
-
 void SensorViewer::setController(Controller* c) {
     controller = c;
 
     connect(addValueButton, SIGNAL(clicked(bool)), controller, SLOT(pushValue()));
     connect(removeLastValueButton, SIGNAL(clicked(bool)), controller, SLOT(popValue()));
     connect(runSimulationButton, SIGNAL(clicked(bool)), controller, SLOT(Simulation()));
-
+    connect(runRandomSimulationButton, SIGNAL(clicked(bool)), controller, SLOT(randSimulation()));
     // menù/gestione file
     connect(saveAction, SIGNAL(triggered()), controller, SLOT(save()));
     connect(openAction, SIGNAL(triggered()), controller, SLOT(open()));
@@ -427,9 +412,9 @@ float SensorViewer::showValueDialog(){
     bool ok;
     float value = static_cast<float>(QInputDialog::getDouble(this, tr("Aggiungi Valore"),
                                                              tr("Inserisci il nuovo valore del sensore:"),
-                                                             0.0,   // valore predefinito
-                                                             -10000.0, // valore minimo
-                                                             10000.0,  // valore massimo
+                                                             1.0,   // valore predefinito
+                                                             -500.0, // valore minimo
+                                                             4000.0,  // valore massimo
                                                              2, // numero di decimali
                                                              &ok));
     if (ok) {

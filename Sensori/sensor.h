@@ -12,6 +12,8 @@ protected:
     std::vector<float> values;
     float MinValue = 0;
     float MaxValue = 0;
+    float tolMin;
+    float tolMax;
 public:
     virtual ~Sensor() = default;
     Sensor(const std::string&);
@@ -23,6 +25,7 @@ public:
     float getMax() const;
     void setMax(float);
     virtual std::vector<float> randSimulation() const = 0;
+    virtual bool validValue(float v) const = 0;
     void addValue(float value);
     void setAllValues(std::vector<float>);
     void updateMaxValue();
@@ -34,7 +37,9 @@ public:
     std::vector<float> getAllValues() const;
     std::string toString() const;
     void setID(unsigned int id);
-    bool isEmpty();
+    bool isEmpty() const;
     virtual std::string getType() const = 0;
+    float getTolMin() const;
+    float getTolMax() const;
 };
 #endif // SENSOR_H
