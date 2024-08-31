@@ -12,7 +12,6 @@
 Controller::Controller(QObject *parent)
     : QObject(parent), autoMode(false), timer(new QTimer) {
     selectedSensor = nullptr;
-    //connect(timer,SIGNAL(timeout()),this,SLOT(show()));
 }
 
 void Controller::setRepo(SensorRepository* r) {Repo = r;}
@@ -37,7 +36,6 @@ void Controller::add(){
         return;
     }
 
-    // Mostra un dialogo per inserire l'ID del sensore
     bool cercaNuovoId = true;
     unsigned int id;
     while(cercaNuovoId)
@@ -49,7 +47,6 @@ void Controller::add(){
             return;
         }
 
-        // Controllo che l'id non sia già assegnato ad un altro sensore
         cercaNuovoId = false;
         for(auto s : Repo->getAllSensors())
         {
@@ -61,7 +58,6 @@ void Controller::add(){
         }
     }
 
-    // Mostra un dialogo per inserire il nome del sensore
     QString placeholder;
     if (sensorType == "Temperatura") {
         placeholder = "Temp" + QString::number(id);
@@ -193,6 +189,10 @@ void Controller::Simulation() {
                 view->showGraph(phgraph.getGraph());
             }
             else if(tb){
+                if(tb->getAllValues().empty()){
+                    view->showWarning("Aggiungi piu valori al sensore");
+                    return;
+                }
                 GraphBars turbgraph;
                 turbgraph.setGraph(tb);
                 view->showGraph(turbgraph.getGraph());
@@ -242,14 +242,19 @@ void Controller::randSimulation() {
 
 void Controller::selectSensor() {
     try {
-        unsigned int sensorID = view->showSelectDialog();
-        selectedSensor = Repo->searchSensor(sensorID);
-        if (selectedSensor) {
-            view->showSensor(selectedSensor);
-            view->clearGraph();
-        } else {
-            view->showWarning("Sensore inesistente");
+        unsigned int sensorID;
+        if(!Repo->getEmpty()){
+            sensorID = view->showSelectDialog();
+            selectedSensor = Repo->searchSensor(sensorID);
+            if (selectedSensor) {
+                view->showSensor(selectedSensor);
+                view->clearGraph();
+            } else {
+                view->showWarning("Sensore inesistente");
+            }
         }
+        else
+            view->showWarning("Nessun sensore presente");
     } catch (std::runtime_error& exc) {
         view->showWarning("Nessun sensore selezionato");
     }
@@ -286,7 +291,7 @@ void Controller::pushValue(){
             selectedSensor->addValue(valuetoAdd);
             selectedSensor->updateMaxValue();
             selectedSensor->updateMinValue();
-            view->showSensor(selectedSensor);  // Aggiorna la visualizzazione dei sensori
+            view->showSensor(selectedSensor);
             view->showSensorLists(Repo->getAllSensors());
         }
 
@@ -325,14 +330,12 @@ void Controller::open() {
 
             view->clearData();
             view->showSensorLists(Repo->getAllSensors());
-
-            QMessageBox::information(view, "Apri sensori", "Sensori aperti correttamente");
+            view->clearGraph();
         } else {
             throw std::runtime_error("Il file JSON non contiene dati sui sensori.");
         }
     }
     catch (const std::runtime_error& exc) {
-        // Mostra un messaggio di errore
         QMessageBox::warning(view, "Errore", exc.what());
     }
 }

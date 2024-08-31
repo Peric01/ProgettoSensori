@@ -15,7 +15,7 @@ void GraphArea::setGraph(Sensor* s) {
     int index = 0;
     for (float val : vals) {
         sensorSeries->append(index, val);
-        referenceSeries->append(index, 7); // Valore neutro di pH
+        referenceSeries->append(index, 7);
         ++index;
     }
     referenceSeries->setColor(Qt::black);
@@ -68,7 +68,7 @@ void GraphArea::setRandGraph(Sensor* s){
     int index = 0;
     for (float val : vals) {
         sensorSeries->append(index, val);
-        referenceSeries->append(index, 7); // Valore neutro di pH
+        referenceSeries->append(index, 7);
         ++index;
     }
     referenceSeries->setColor(Qt::black);

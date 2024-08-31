@@ -18,9 +18,9 @@ PHSensor::PHSensor(u_int id, const QString& name, float value) : Sensor(name.toS
     setID(id);
     tolMin = 0.01;
     tolMax = 14;
-    addValue(value);  // Aggiunge il valore iniziale al vector values
-    updateMinValue(); // Aggiorna il valore minimo
-    updateMaxValue(); // Aggiorna il valore massimo
+    addValue(value);
+    updateMinValue();
+    updateMaxValue();
 }
 
 std::string PHSensor::getType() const {
