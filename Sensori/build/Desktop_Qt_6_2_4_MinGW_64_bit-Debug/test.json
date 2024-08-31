@@ -1,0 +1,14 @@
+{
+    "sensors": [
+        {
+            "id": 1,
+            "max": 1,
+            "min": 1,
+            "name": "Turb1",
+            "type": "TurbSensor",
+            "vals": [
+                1
+            ]
+        }
+    ]
+}

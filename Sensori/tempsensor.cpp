@@ -5,9 +5,9 @@ TempSensor::TempSensor(u_int id, const QString& name,  float value) : Sensor(nam
     setID(id);
     tolMin = -50;
     tolMax = 250;
-    addValue(value);  // Aggiunge il valore iniziale al vector values
-    updateMinValue(); // Aggiorna il valore minimo
-    updateMaxValue(); // Aggiorna il valore massimo
+    addValue(value);
+    updateMinValue();
+    updateMaxValue();
 }
 
 std::vector<float> TempSensor::randSimulation() const{

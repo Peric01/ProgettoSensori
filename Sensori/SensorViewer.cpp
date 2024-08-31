@@ -26,10 +26,9 @@ void SensorViewer::clearLayout(QLayout* layout) const{
 
 QFrame* SensorViewer::createGrayFrame() {
     QFrame* grayFrame = new QFrame(this);
-    grayFrame->setFrameStyle(QFrame::Box);  // Opzionale: imposta lo stile del frame
-    grayFrame->setStyleSheet("background-color: gray;");  // Imposta il colore di sfondo a grigio
+    grayFrame->setFrameStyle(QFrame::Box);
+    grayFrame->setStyleSheet("background-color: gray;");
 
-    // Configura un layout vuoto per il frame se necessario
     QVBoxLayout* layout = new QVBoxLayout;
     grayFrame->setLayout(layout);
 
@@ -37,11 +36,9 @@ QFrame* SensorViewer::createGrayFrame() {
 }
 
 void SensorViewer::showSensor(Sensor* s) {
-    // Ripuliamo i layout dati dal sensore precedente
     clearLayout(staticBox);
     clearLayout(editableBox);
 
-    // Creiamo delle QLabel per mostrare le informazioni del sensore
     QString min = s->isEmpty() ? "N/a" : QString::number(s->getMin());
     QString max = s->isEmpty() ? "N/a" : QString::number(s->getMax());
     QString cur = s->isEmpty() ? "N/a" : QString::number(s->getCurrentValue());
@@ -52,7 +49,6 @@ void SensorViewer::showSensor(Sensor* s) {
     QLabel* maxValueLabel = new QLabel("Valore Massimo: " + max, this);
     QLabel* currentValueLabel = new QLabel("Valore Corrente: " + cur, this);
 
-    // Aggiungiamo le QLabel al layout principale
     staticBox->addWidget(nameLabel);
     staticBox->addWidget(idLabel);
 
@@ -60,7 +56,6 @@ void SensorViewer::showSensor(Sensor* s) {
     editableBox->addWidget(maxValueLabel);
     editableBox->addWidget(currentValueLabel);
 
-    // Determiniamo il tipo di sensore e aggiungiamo le informazioni specifiche
     QString type = "Tipo: ";
     if (dynamic_cast<TempSensor*>(s)) {
         type += "Temperatura";
@@ -73,7 +68,6 @@ void SensorViewer::showSensor(Sensor* s) {
     QLabel* typeLabel = new QLabel(type, this);
     staticBox->addWidget(typeLabel);
 
-    // Aggiorniamo la visualizzazione
     staticBox->update();
 }
 
@@ -143,7 +137,7 @@ void SensorViewer::showSensorLists(std::vector<Sensor*> sensors)
         PHSensor* ph = dynamic_cast<PHSensor*>(s);
 
         QLabel* label = new QLabel(QString::fromStdString(s->getName()), this);
-        label->setMaximumHeight(20);  // Imposta l'altezza massima per ciascuna QLabel
+        label->setMaximumHeight(20);
         if (tp) {
             temperatureLayout->addWidget(label);
         }
@@ -169,7 +163,6 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
     temperatureLayout->addWidget(temperatureLabel);
     temperatureLabel->setMaximumHeight(20);
 
-    // Scroll area per i sensori di temperatura
     QScrollArea* temperatureScrollArea = new QScrollArea(this);
     QWidget* temperatureWidget = new QWidget();
     temperatureWidget->setLayout(temperatureLayout);
@@ -177,7 +170,6 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
     temperatureScrollArea->setWidgetResizable(true);
     sensorLayout->addWidget(temperatureScrollArea);
 
-    // Sezione per i sensori di torbidità
     turbidityLayout = new QVBoxLayout;
     turbidityLayout->setAlignment(Qt::AlignTop);
 
@@ -186,7 +178,6 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
     turbidityLabel->setMaximumHeight(20);
 
 
-    // Scroll area per i sensori di torbidità
     QScrollArea* turbidityScrollArea = new QScrollArea(this);
     QWidget* turbidityWidget = new QWidget();
     turbidityWidget->setLayout(turbidityLayout);
@@ -194,7 +185,6 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
     turbidityScrollArea->setWidgetResizable(true);
     sensorLayout->addWidget(turbidityScrollArea);
 
-    // Sezione per i sensori di pH
     phLayout = new QVBoxLayout;
     phLayout->setAlignment(Qt::AlignTop);
 
@@ -202,7 +192,6 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
     phLayout->addWidget(phLabel);
     phLabel->setMaximumHeight(20);
 
-    // Scroll area per i sensori di pH
     QScrollArea* phScrollArea = new QScrollArea(this);
     QWidget* phWidget = new QWidget();
     phWidget->setLayout(phLayout);
@@ -212,11 +201,9 @@ void SensorViewer::addSensors(QVBoxLayout* sensorLayout)
 }
 
 void SensorViewer::clearData() {
-    // Pulisce i layout staticBox e editableBox
     if (staticBox) {
         clearLayout(staticBox);
 
-        // Aggiungi più QLabel per Nome, ID e Tipo
         QLabel* nameLabel = new QLabel("Nome: ", this);
         QLabel* idLabel = new QLabel("ID: ", this);
         QLabel* typeLabel = new QLabel("Tipo: ", this);
@@ -240,14 +227,11 @@ void SensorViewer::clearData() {
 
 void SensorViewer::addData(QHBoxLayout* dataLayout)
 {
-    // Crea i layout per i dati statici e modificabili
     staticBox = new QVBoxLayout;
     editableBox = new QVBoxLayout;
 
-    // Pulisce i layout dai dati precedenti
     clearData();
 
-    // Incapsula ciascun layout in un QFrame
     QFrame* staticFrame = new QFrame(this);
     staticFrame->setLayout(staticBox);
     staticFrame->setFrameStyle(QFrame::Box | QFrame::Plain);
@@ -258,7 +242,6 @@ void SensorViewer::addData(QHBoxLayout* dataLayout)
     editableFrame->setFrameStyle(QFrame::Box | QFrame::Plain);
     editableFrame->setStyleSheet("border: 1px solid black;");
 
-    // Aggiungi i QFrame al layout principale
     dataLayout->addWidget(staticFrame);
     dataLayout->addWidget(editableFrame);
 }
@@ -268,43 +251,38 @@ void SensorViewer::addButtons(QVBoxLayout* buttonLayout)
     addValueButton = new QPushButton("Aggiungi un valore", this);
     removeLastValueButton = new QPushButton("Rimuovi l'ultimo valore", this);
 
-    // Creiamo un layout orizzontale per i due nuovi pulsanti
     QHBoxLayout* simulationButtonsLayout = new QHBoxLayout;
 
-    // Creiamo i due nuovi pulsanti
-    runSimulationButton = new QPushButton("Simulazione", this);
+    runSimulationButton = new QPushButton("Nuova Simulazione", this);
     runRandomSimulationButton = new QPushButton("Simulazione Random", this);
 
-    // Aggiungiamo i pulsanti al layout orizzontale
     simulationButtonsLayout->addWidget(runSimulationButton);
     simulationButtonsLayout->addWidget(runRandomSimulationButton);
 
-    // Aggiungiamo i pulsanti al layout verticale principale
     buttonLayout->addWidget(addValueButton);
     buttonLayout->addWidget(removeLastValueButton);
 
-    // Aggiungiamo il layout contenente i due nuovi pulsanti
     buttonLayout->addLayout(simulationButtonsLayout);
 }
 
 SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     QVBoxLayout* mainLayout = new QVBoxLayout;
 
-    QHBoxLayout* screenLayout = new QHBoxLayout;  // Layout principale: due colonne (sinistra e destra)
+    QHBoxLayout* screenLayout = new QHBoxLayout;
 
-    QVBoxLayout* sensorLayout = new QVBoxLayout;  // Layout verticale per i sensori
+    QVBoxLayout* sensorLayout = new QVBoxLayout;
     QFrame* sensorFrame = new QFrame(this);
     sensorFrame->setFrameStyle(QFrame::Box);
     sensorFrame->setStyleSheet("border: 2px solid black;");
     sensorFrame->setLayout(sensorLayout);
 
-    dataAndGraphLayout = new QVBoxLayout; // Layout verticale per dati e grafico
+    dataAndGraphLayout = new QVBoxLayout;
 
-    QHBoxLayout* dataAndButtonsLayout = new QHBoxLayout;  // Layout orizzontale per dati e pulsanti
+    QHBoxLayout* dataAndButtonsLayout = new QHBoxLayout;
 
-    graphLayout = new QVBoxLayout;  // Layout per il grafico
+    graphLayout = new QVBoxLayout;
 
-    QVBoxLayout* buttonLayout = new QVBoxLayout; // Layout verticale per i pulsanti
+    QVBoxLayout* buttonLayout = new QVBoxLayout;
 
     // Menu
     addMenus(mainLayout);
@@ -312,7 +290,7 @@ SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     // Sezione per i sensori
     addSensors(sensorLayout);
 
-    // Aggiungi i dati e i pulsanti
+    // Aggiunge i dati e i pulsanti
     addData(dataAndButtonsLayout);
     addButtons(buttonLayout);
     dataAndButtonsLayout->addLayout(buttonLayout);
@@ -328,7 +306,7 @@ SensorViewer::SensorViewer(QWidget* parent) : QWidget(parent) {
     mainLayout->setSpacing(0);
     setLayout(mainLayout);
 
-    setMinimumWidth(800);  // Imposta la larghezza minima per l'intero SensorViewer
+    setMinimumWidth(800);
     setMinimumHeight(400);
     resize(QSize(1024, 720));
 }
@@ -384,7 +362,6 @@ void SensorViewer::setController(Controller* c) {
 
 
 unsigned int SensorViewer::showRemoveDialog() {
-    // Implementa un dialogo per selezionare il sensore da rimuovere
     bool ok;
     unsigned int sensorId = QInputDialog::getInt(this, tr("Rimuovi Sensore"),
                                                  tr("Inserisci l'ID del sensore:"), 1, 0, 100, 1, &ok);
@@ -396,7 +373,6 @@ unsigned int SensorViewer::showRemoveDialog() {
 }
 
 unsigned int SensorViewer::showSelectDialog() {
-    // Implementa un dialogo per selezionare un sensore
     bool ok;
     unsigned int sensorId = QInputDialog::getInt(this, tr("Seleziona Sensore"),
                                                  tr("Inserisci l'ID del sensore:"), 1, 0, 100, 1, &ok);
@@ -410,13 +386,7 @@ unsigned int SensorViewer::showSelectDialog() {
 
 float SensorViewer::showValueDialog(){
     bool ok;
-    float value = static_cast<float>(QInputDialog::getDouble(this, tr("Aggiungi Valore"),
-                                                             tr("Inserisci il nuovo valore del sensore:"),
-                                                             1.0,   // valore predefinito
-                                                             -500.0, // valore minimo
-                                                             4000.0,  // valore massimo
-                                                             2, // numero di decimali
-                                                             &ok));
+    float value = static_cast<float>(QInputDialog::getDouble(this, tr("Aggiungi Valore"), tr("Inserisci il nuovo valore del sensore:"),1.0, -500.0,4000.0,2,&ok));
     if (ok) {
         return value;
     } else {
@@ -425,7 +395,6 @@ float SensorViewer::showValueDialog(){
 }
 
 unsigned int SensorViewer::showSearchDialog() {
-    // Implementa un dialogo per cercare un sensore
     bool ok;
     unsigned int sensorId = QInputDialog::getInt(this, tr("Cerca Sensore"),
                                                  tr("Inserisci l'ID del sensore:"), 1, 0, 100, 1, &ok);
