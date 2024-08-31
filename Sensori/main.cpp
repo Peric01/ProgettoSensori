@@ -3,10 +3,14 @@
 #include "SensorRepository.h"
 
 #include <QApplication>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    QIcon appIcon(":/iconbacterias.ico");
+    a.setWindowIcon(appIcon);
+    a.setWindowIcon(appIcon);
     SensorViewer w;
     Controller c;
     SensorRepository r;
